@@ -6,103 +6,89 @@
   <title>Gioia mundo</title>
   <meta name="description" content="Gioia mundo — wereldse joy, minimalistisch design." />
   <style>
-    :root{
-      --bg:#0b0c10; --text:#f5f7ff; --muted:#b8bfd8; --line:#232843;
-      --radius:22px;
-    }
+    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8;--line:#232843;--radius:22px;}
     *{box-sizing:border-box}
     body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      color:var(--text);
+      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--text);
       background:
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg, #070810, var(--bg));
     }
-    .wrap{max-width:1100px; margin:0 auto; padding:22px}
-    .shell{
-      display:grid; gap:14px;
-      grid-template-columns:1.35fr .65fr;
-      min-height:calc(100vh - 44px);
-    }
-    @media (max-width: 920px){ .shell{grid-template-columns:1fr} }
-
-    .card{
-      background: rgba(18,20,32,.72);
-      border:1px solid rgba(35,40,67,.75);
-      border-radius: 26px;
-      overflow:hidden;
-    }
-
-    .mapWrap{position:relative; min-height:520px;}
-    .mapWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
-
-    .overlay{
-      position:absolute; left:14px; top:14px; right:14px;
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:space-between;
-      pointer-events:none;
-      z-index:3;
-    }
-
-    .badge{
-      pointer-events:auto;
-      padding:9px 12px; border-radius:999px;
-      background: rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(10px);
-      font-weight:800; font-size:13px;
-      color:rgba(245,247,255,.92);
-    }
-
-    .btn{
-      pointer-events:auto;
-      padding:9px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-      color:rgba(245,247,255,.92);
-      font-weight:800; font-size:13px;
-      text-decoration:none;
-      display:inline-flex; gap:8px; align-items:center;
-    }
-
-    .side{padding:18px; display:grid; gap:14px; align-content:start}
-    .logo{
-      letter-spacing:.38em;
-      font-weight:500;
-      font-size:18px;
-      color:rgba(245,247,255,.92);
-    }
-    .muted{color:var(--muted); line-height:1.7}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
+    @media(max-width:920px){.shell{grid-template-columns:1fr}}
+    .card{background:rgba(18,20,32,.72);border:1px solid rgba(35,40,67,.75);border-radius:26px;overflow:hidden}
+    .mapWrap{position:relative;min-height:520px}
+    .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .overlay{position:absolute;left:14px;top:14px;right:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;pointer-events:none;z-index:3}
+    .badge{pointer-events:auto;padding:9px 12px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);font-weight:800;font-size:13px;color:rgba(245,247,255,.92)}
+    .btn{pointer-events:auto;padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.35);backdrop-filter:blur(10px);color:rgba(245,247,255,.92);font-weight:800;font-size:13px;text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+    .side{padding:18px;display:grid;gap:14px;align-content:start}
+    .logo{letter-spacing:.38em;font-weight:500;font-size:18px;color:rgba(245,247,255,.92)}
+    .muted{color:var(--muted);line-height:1.7}
     .small{font-size:13px}
-    .pill{
-      padding:9px 12px; border-radius:999px;
-      border:1px solid rgba(35,40,67,.9);
-      background: rgba(11,12,16,.35);
-      color: var(--muted);
-      font-weight:800; font-size:13px;
-      width:fit-content;
-    }
-    .divider{height:1px; background: rgba(35,40,67,.65); margin:8px 0}
+    .pill{padding:9px 12px;border-radius:999px;border:1px solid rgba(35,40,67,.9);background:rgba(11,12,16,.35);color:var(--muted);font-weight:800;font-size:13px;width:fit-content}
+    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
+    .fallback{border:1px dashed rgba(35,40,67,.9);border-radius:16px;padding:12px;color:var(--muted)}
+    .mapLoading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(184,191,216,.75);font-weight:800;letter-spacing:.06em;background:rgba(11,12,16,.35);z-index:2}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <div class="shell">
+    <section class="card mapWrap">
+      <div class="overlay">
+        <span class="badge" id="badgeText">📍</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn" id="streetBtn" target="_blank">👣 Street View</a>
+          <a class="btn" id="mapsBtn" target="_blank">🗺️ Maps</a>
+          <a class="btn" id="satBtn" target="_blank">🛰️ Satellite</a>
+        </div>
+      </div>
+      <div class="mapLoading" id="mapLoading">LOADING MAP…</div>
+      <iframe id="mapFrame"></iframe>
+    </section>
 
-    .fallback{
-      border:1px dashed rgba(35,40,67,.9);
-      border-radius: 16px;
-      padding:12px;
-      color:var(--muted);
-    }
+    <aside class="card side">
+      <div class="logo">GIOIA MUNDO</div>
+      <p class="muted">wereldse joy.<br>minimalistisch design.</p>
+      <span class="pill" id="coordText"></span>
 
-    /* Subtiele “loaded” hint; geen echte detectie mogelijk door cross-origin,
-       maar maakt UX netter als Maps traag is */
-    .mapLoading{
-      position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      color:rgba(184,191,216,.75);
-      font-weight:800;
-      letter-spacing:.06em;
-      background: radial-gradient(600px 320px at 30% 20%, rgba(124,92,255,.12), transparent 60%),
-                  radial-gradient(500px 300px at 80% 20%, rgba(46,229,157,.10), transparent 55%),
-                  rgba(11,12,16,.35);
-      z-index:2;
-      p
+      <div class="divider"></div>
+
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
+        data-instgrm-version="14"
+        style="background:#fff;border-radius:12px">
+      </blockquote>
+      <script async src="https://www.instagram.com/embed.js"></script>
+
+      <div class="fallback small">
+        <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script>
+const lat = -22.921292;
+const lng = -43.188711;
+const z = 18;
+
+document.getElementById("coordText").textContent = `${lat}, ${lng}`;
+document.getElementById("badgeText").textContent = `📍 ${lat}, ${lng}`;
+
+document.getElementById("mapsBtn").href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+document.getElementById("streetBtn").href = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
+document.getElementById("satBtn").href = `https://www.google.com/maps/@?api=1&map_action=map&center=${lat},${lng}&zoom=${z}&basemap=satellite`;
+
+document.getElementById("mapFrame").src =
+  `https://www.google.com/maps?output=embed&ll=${lat},${lng}&z=${z}&t=k`;
+
+document.getElementById("mapFrame").onload = () => {
+  document.getElementById("mapLoading").style.display = "none";
+};
+</script>
+</body>
+</html>
