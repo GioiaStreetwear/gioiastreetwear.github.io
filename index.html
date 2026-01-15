@@ -72,23 +72,33 @@
 </main>
 
 <script>
-const lat = -22.921292;
-const lng = -43.188711;
-const z = 18;
+  // Lees coördinaten uit QR-link (?lat=&lng=&z=)
+  const params = new URLSearchParams(location.search);
+  const lat = parseFloat(params.get("lat")) || -22.921292;
+  const lng = parseFloat(params.get("lng")) || -43.188711;
+  const z   = parseInt(params.get("z") || 18, 10);
 
-document.getElementById("coordText").textContent = `${lat}, ${lng}`;
-document.getElementById("badgeText").textContent = `📍 ${lat}, ${lng}`;
+  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
-document.getElementById("mapsBtn").href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-document.getElementById("streetBtn").href = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
-document.getElementById("satBtn").href = `https://www.google.com/maps/@?api=1&map_action=map&center=${lat},${lng}&zoom=${z}&basemap=satellite`;
+  // Kaart + knoppen
+  document.getElementById("mapsBtn").href =
+    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-document.getElementById("mapFrame").src =
-  `https://www.google.com/maps?output=embed&ll=${lat},${lng}&z=${z}&t=k`;
+  // Betrouwbare Street View URL (pakt dichtstbijzijnde pano)
+  document.getElementById("streetBtn").href =
+    `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
 
-document.getElementById("mapFrame").onload = () => {
-  document.getElementById("mapLoading").style.display = "none";
-};
+  document.getElementById("satBtn").href =
+    `https://www.google.com/maps/@?api=1&map_action=map&center=${lat},${lng}&zoom=${z}&basemap=satellite`;
+
+  // Embed (satellietkaart)
+  document.getElementById("mapFrame").src =
+    `https://www.google.com/maps?output=embed&ll=${lat},${lng}&z=${z}&t=k`;
+
+  document.getElementById("mapFrame").onload = () => {
+    document.getElementById("mapLoading").style.display = "none";
+  };
 </script>
 </body>
 </html>
