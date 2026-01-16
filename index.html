@@ -22,7 +22,6 @@
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg,#070810,var(--bg));
-      overflow-x:hidden;
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
@@ -47,49 +46,38 @@
       pointer-events:none;
       z-index:5;
     }
-    .badge{
+
+    .badge,.btn{
       pointer-events:auto;
       padding:9px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
-      font-weight:800;font-size:13px;
-      color:rgba(245,247,255,.92);
-    }
-    .btn{
-      pointer-events:auto;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(10px);
       color:rgba(245,247,255,.92);
       font-weight:800;font-size:13px;
-      text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
-      cursor:pointer;
-      user-select:none;
     }
-    .btn.active{background:#fff;color:#000;border-color:rgba(255,255,255,.45)}
+    .btn{cursor:pointer;text-decoration:none}
+    .btn.active{background:#fff;color:#000}
 
     .loading{
-      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
       color:rgba(184,191,216,.75);
       font-weight:800;letter-spacing:.06em;
       background:rgba(11,12,16,.25);
-      z-index:2;pointer-events:none;
+      z-index:2;
     }
 
     /* RIGHT */
-    .side{padding:18px;display:grid;gap:14px;align-content:start}
+    .side{padding:18px;display:grid;gap:14px}
     .logo{
-      font-family:'Montserrat', system-ui, sans-serif;
+      font-family:'Montserrat',sans-serif;
       font-weight:300;
-      letter-spacing:0.75em;
+      letter-spacing:.75em;
       text-transform:uppercase;
       font-size:18px;
-      color:rgba(245,247,255,.92);
     }
-    @media(max-width:420px){.logo{letter-spacing:0.55em}}
     .muted{color:var(--muted);line-height:1.7;margin:0}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
     .pill{
@@ -107,28 +95,25 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- LEFT: Street View default -->
-    <section class="card mapWrap" aria-label="Locatie">
+    <!-- LEFT -->
+    <section class="card mapWrap">
       <div class="overlay">
         <span class="badge" id="badgeText">📍</span>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
-          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
-          <a class="btn" id="openBtn" target="_blank" rel="noopener">↗ Open SV</a>
+        <div style="display:flex;gap:10px">
+          <button class="btn active" id="svBtn">👣 Street View</button>
+          <button class="btn" id="mapBtn">🗺️ Map</button>
         </div>
       </div>
 
       <div class="loading" id="loading">LOADING…</div>
 
-      <!-- IMPORTANT: no src here. JS sets it. -->
-      <iframe id="svFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      <iframe id="mapFrame" style="display:none" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <iframe id="svFrame" allowfullscreen></iframe>
+      <iframe id="mapFrame" style="display:none" allowfullscreen></iframe>
     </section>
 
-    <!-- RIGHT: Instagram -->
-    <aside class="card side" aria-label="Info">
-      <div class="logo">Gioia Mundo</div>
+    <!-- RIGHT -->
+    <aside class="card side">
+      <div class="logo">GIOIA MUNDO</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
       <span class="pill" id="coordText"></span>
 
@@ -137,84 +122,59 @@
       <blockquote class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
         data-instgrm-version="14"
-        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
+        style="background:#fff;border-radius:12px">
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
 
       <div class="divider"></div>
-      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
+      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
     </aside>
 
   </div>
 </main>
 
 <script>
-  // Use ONE location for everything (so it never feels "off")
-  // Change these two if you want a different point:
-  const lat = -22.921292;
-  const lng = -43.188711;
+  // 📍 Rua Constante Jardim 2 — Rio de Janeiro
+  const lat = -22.921610;
+  const lng = -43.188540;
+  const zoom = 19;
 
-  const zMap = 19; // keep pin visible in map embed
-
-  // Street View embed (best-effort without API key)
-  // This is the variant that has worked for you before:
-  const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
-
-  // Map embed with pin
-  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
-
-  // External open links (always work)
-  const openSvUrl   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
-  const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-
-  // Fill UI
-  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-  document.getElementById("badgeText").textContent = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  const svSrc =
+    `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
+  const mapSrc =
+    `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
 
   const svFrame = document.getElementById("svFrame");
   const mapFrame = document.getElementById("mapFrame");
   const loading = document.getElementById("loading");
 
-  // Set src ONCE via JS so nothing can overwrite it
   svFrame.src = svSrc;
   mapFrame.src = mapSrc;
 
-  // Hide loading when active frame loads
-  svFrame.addEventListener("load", () => {
-    if (svFrame.style.display !== "none") loading.style.display = "none";
-  });
-  mapFrame.addEventListener("load", () => {
-    if (mapFrame.style.display !== "none") loading.style.display = "none";
-  });
+  document.getElementById("coordText").textContent =
+    `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent =
+    `📍 Rua Constante Jardim 2`;
 
-  // Toggle buttons
-  const svBtn = document.getElementById("svBtn");
-  const mapBtn = document.getElementById("mapBtn");
-  const openBtn = document.getElementById("openBtn");
+  svFrame.onload = () => loading.style.display = "none";
 
-  // Default: Street View
-  openBtn.href = openSvUrl;
-  openBtn.textContent = "↗ Open SV";
-
-  svBtn.addEventListener("click", () => {
+  document.getElementById("svBtn").onclick = () => {
     loading.style.display = "flex";
     svFrame.style.display = "block";
     mapFrame.style.display = "none";
-    svBtn.classList.add("active");
-    mapBtn.classList.remove("active");
-    openBtn.href = openSvUrl;
-    openBtn.textContent = "↗ Open SV";
-  });
+    svFrame.src = svSrc;
+    document.getElementById("svBtn").classList.add("active");
+    document.getElementById("mapBtn").classList.remove("active");
+  };
 
-  mapBtn.addEventListener("click", () => {
+  document.getElementById("mapBtn").onclick = () => {
     loading.style.display = "flex";
     svFrame.style.display = "none";
     mapFrame.style.display = "block";
-    mapBtn.classList.add("active");
-    svBtn.classList.remove("active");
-    openBtn.href = openMapsUrl;
-    openBtn.textContent = "↗ Open Maps";
-  });
+    mapFrame.src = mapSrc;
+    document.getElementById("mapBtn").classList.add("active");
+    document.getElementById("svBtn").classList.remove("active");
+  };
 </script>
 </body>
 </html>
