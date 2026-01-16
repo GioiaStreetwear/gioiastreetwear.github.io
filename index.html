@@ -14,6 +14,7 @@
   <style>
     :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8;--line:#232843;}
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
@@ -26,96 +27,86 @@
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
-    @media(max-width:920px){.shell{grid-template-columns:1fr}}
+    .shell{
+      display:grid;
+      gap:14px;
+      grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+      align-items:start;
+    }
+    @media(max-width:920px){
+      .wrap{padding:16px}
+      .shell{grid-template-columns:1fr}
+    }
 
     .card{
       background:rgba(18,20,32,.72);
       border:1px solid rgba(35,40,67,.75);
       border-radius:26px;
       overflow:hidden;
+      min-width:0; /* voorkomt overflow in grid */
     }
 
-    /* LEFT */
-    .mapWrap{position:relative;min-height:520px}
-    .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(1.05) contrast(1.05)}
-    .overlayTop{
-      position:absolute;left:14px;top:14px;right:14px;
-      display:flex;gap:10px;flex-wrap:wrap;
-      align-items:center;justify-content:space-between;
-      pointer-events:none;z-index:6;
+    /* LEFT COLUMN */
+    .leftCol{display:grid;gap:14px;align-content:start;min-width:0}
+
+    .mapCard{
+      position:relative;
+      height:220px;            /* vaste hoogte -> geen layout blow-up */
+      border-radius:26px;
+      overflow:hidden;
     }
-    .badge,.btn{
-      pointer-events:auto;
-      padding:9px 12px;border-radius:999px;
+    @media(max-width:920px){
+      .mapCard{height:240px}
+    }
+
+    .mapCard iframe{
+      position:absolute;inset:0;
+      width:100%;height:100%;
+      border:0;
+      display:block;
+    }
+
+    .badge{
+      position:absolute;left:14px;top:14px;z-index:3;
+      padding:8px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
-      color:rgba(245,247,255,.92);
       font-weight:800;font-size:13px;
-      display:inline-flex;gap:8px;align-items:center;
-      text-decoration:none;
-      user-select:none;
+      color:rgba(245,247,255,.92);
+      pointer-events:none;
+      max-width:calc(100% - 28px);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .btn{cursor:pointer}
-    .btn.active{background:#fff;color:#000;border-color:rgba(255,255,255,.45)}
 
-    /* Editorial Street View overlay (always works) */
-    .svOverlay{
-      position:absolute;inset:0;z-index:5;
-      display:flex;align-items:flex-end;justify-content:flex-start;
-      padding:18px;
-      background:
-        radial-gradient(700px 380px at 30% 20%, rgba(124,92,255,.18), transparent 60%),
-        radial-gradient(600px 380px at 80% 20%, rgba(46,229,157,.14), transparent 55%),
-        linear-gradient(180deg, rgba(11,12,16,.15), rgba(11,12,16,.65));
+    .mapOverlay{
+      position:absolute;inset:0;z-index:2;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      padding:14px;
+      background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
       pointer-events:none;
     }
-    .svCard{
-      pointer-events:auto;
-      width:min(560px, 92%);
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.30);
-      backdrop-filter:blur(12px);
-      border-radius:22px;
-      padding:16px;
-    }
-    .svKicker{
-      color:rgba(245,247,255,.90);
-      font-weight:900;
-      letter-spacing:.08em;
-      font-size:12px;
-      text-transform:uppercase;
-      margin:0 0 8px;
-    }
-    .svTitle{
-      margin:0 0 10px;
-      font-size:18px;
-      line-height:1.25;
-    }
-    .svText{
-      margin:0 0 14px;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:13px;
-    }
-    .svActions{display:flex;gap:10px;flex-wrap:wrap}
-    .svActions .btn{background:#fff;color:#000;border-color:rgba(255,255,255,.55)}
-    .svActions .btn.secondary{background:rgba(0,0,0,.25);color:rgba(245,247,255,.92);border-color:rgba(255,255,255,.16)}
 
-    /* RIGHT */
-    .side{padding:18px;display:grid;gap:14px;align-content:start}
-    .logo{
-      font-family:'Montserrat', system-ui, sans-serif;
-      font-weight:300;
-      letter-spacing:0.75em;
-      text-transform:uppercase;
-      font-size:18px;
+    .btnRow{pointer-events:auto;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(10px);
       color:rgba(245,247,255,.92);
+      font-weight:800;font-size:13px;
+      text-decoration:none;
+      display:inline-flex;gap:8px;align-items:center;
+      user-select:none;
+      white-space:nowrap;
     }
-    @media(max-width:420px){.logo{letter-spacing:0.55em}}
-    .muted{color:var(--muted);line-height:1.7;margin:0}
-    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
+    .btn.primary{background:#fff;color:#000;border-color:rgba(255,255,255,.55)}
+
+    .miniInfo{padding:16px}
     .pill{
       padding:9px 12px;border-radius:999px;
       border:1px solid rgba(35,40,67,.9);
@@ -123,6 +114,32 @@
       color:var(--muted);
       font-weight:800;font-size:13px;
       width:fit-content;
+    }
+    .muted{color:var(--muted);line-height:1.7;margin:0}
+    .small{font-size:13px}
+
+    /* RIGHT COLUMN */
+    .side{padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
+    .logo{
+      font-family:'Montserrat', system-ui, sans-serif;
+      font-weight:300;
+      letter-spacing:0.75em;
+      text-transform:uppercase;
+      font-size:18px;
+      color:rgba(245,247,255,.92);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    @media(max-width:420px){.logo{letter-spacing:0.55em}}
+
+    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
+
+    /* Instagram embed */
+    .instaWrap{
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
     }
   </style>
 </head>
@@ -132,33 +149,28 @@
   <div class="shell">
 
     <!-- LEFT -->
-    <section class="card mapWrap" aria-label="Locatie">
-      <div class="overlayTop">
-        <span class="badge" id="badgeText">📍 Rua Constante Jardim 2</span>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
-          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
-          <a class="btn" id="openBtn" target="_blank" rel="noopener">↗ Open SV</a>
+    <section class="leftCol" aria-label="Map & actions">
+      <div class="card mapCard">
+        <div class="badge" id="badgeText">📍 Rua Constante Jardim 2</div>
+
+        <iframe id="mapFrame"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+
+        <div class="mapOverlay">
+          <div class="btnRow">
+            <a class="btn primary" id="svBtn" target="_blank" rel="noopener">👣 See your art in Street View</a>
+            <a class="btn" id="mapsBtn" target="_blank" rel="noopener">🗺️ Open Maps</a>
+          </div>
         </div>
       </div>
 
-      <!-- Map always loads (no "world map" feel: we zoom to Rio) -->
-      <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-
-      <!-- Editorial overlay shown when "Street View" tab active -->
-      <div class="svOverlay" id="svOverlay">
-        <div class="svCard">
-          <p class="svKicker">Gioia Mundo</p>
-          <p class="svTitle">Step into the street.</p>
-          <p class="svText">
-            This piece was found here — on the exact corner where your T was born.
-            Open Street View to see the spot.
-          </p>
-          <div class="svActions">
-            <a class="btn" id="svOpenPrimary" target="_blank" rel="noopener">↗ Open Street View</a>
-            <button class="btn secondary" id="svSwitchToMap" type="button">🗺️ Show map</button>
-          </div>
-        </div>
+      <div class="card miniInfo">
+        <span class="pill" id="coordText"></span>
+        <p class="muted small" style="margin-top:10px">
+          Tip: Street View opens in a new tab to work reliably in Safari/Firefox.
+        </p>
       </div>
     </section>
 
@@ -169,79 +181,49 @@
       <p class="muted">
         You find the most amazing art on the streets all over the world.<br><br>
         We simply love it and want to expose the art more by connecting it with streetwear.<br><br>
-        On the map you see the exact spot where the street art of your T is born.
+        On the map you see the exact spot where the street art of your T is born,
+        and below you find the artist who created it.
       </p>
-
-      <span class="pill" id="coordText"></span>
 
       <div class="divider"></div>
 
-      <blockquote class="instagram-media"
-        data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
-        data-instgrm-version="14"
-        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
-      </blockquote>
+      <div class="instaWrap">
+        <blockquote class="instagram-media"
+          data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
+          data-instgrm-version="14"
+          style="border:0;margin:0;max-width:100%;min-width:260px;padding:0;">
+        </blockquote>
+      </div>
       <script async src="https://www.instagram.com/embed.js"></script>
 
       <div class="divider"></div>
-      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
+        <a class="btn" href="https://www.instagram.com/p/Cr8z_WQOFVn/" target="_blank" rel="noopener">↗ Open post</a>
+      </div>
     </aside>
 
   </div>
 </main>
 
 <script>
-  // Location (you can later make this dynamic via ?lat=&lng=)
+  // Location
   const lat = -22.921610;
   const lng = -43.188540;
 
-  // Zoom high so you land on the neighborhood (no “world map” feel)
-  const zMap = 17;
+  // Zoom (higher = more zoomed in)
+  const zMap = 18;
 
-  // Map embed (always reliable, shows the pin/spot)
   const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
-
-  // Street View open link (always reliable in new tab)
   const openSvUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
   const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-  // Fill UI
-  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
   document.getElementById("mapFrame").src = mapSrc;
+  document.getElementById("svBtn").href = openSvUrl;
+  document.getElementById("mapsBtn").href = openMapsUrl;
 
-  // Buttons
-  const svBtn = document.getElementById("svBtn");
-  const mapBtn = document.getElementById("mapBtn");
-  const openBtn = document.getElementById("openBtn");
-  const svOverlay = document.getElementById("svOverlay");
-  const svOpenPrimary = document.getElementById("svOpenPrimary");
-  const svSwitchToMap = document.getElementById("svSwitchToMap");
-
-  openBtn.href = openSvUrl;
-  svOpenPrimary.href = openSvUrl;
-
-  const setMode = (mode) => {
-    if (mode === "sv") {
-      svOverlay.style.display = "flex";
-      svBtn.classList.add("active");
-      mapBtn.classList.remove("active");
-      openBtn.href = openSvUrl;
-      openBtn.textContent = "↗ Open SV";
-    } else {
-      svOverlay.style.display = "none";
-      mapBtn.classList.add("active");
-      svBtn.classList.remove("active");
-      openBtn.href = openMapsUrl;
-      openBtn.textContent = "↗ Open Maps";
-    }
-  };
-
-  svBtn.addEventListener("click", () => setMode("sv"));
-  mapBtn.addEventListener("click", () => setMode("map"));
-  svSwitchToMap.addEventListener("click", () => setMode("map"));
-
-  // default: Street View mode (overlay on top of the map)
-  setMode("sv");
+  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 </script>
 </body>
 </html>
