@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <style>
-    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8}
+    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8;--line:#232843;}
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -22,10 +22,13 @@
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg,#070810,var(--bg));
+      overflow-x:hidden;
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    .shell{display:grid;gap:14px;grid-template-columns:1fr}
+    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
+    @media(max-width:920px){.shell{grid-template-columns:1fr}}
+
     .card{
       background:rgba(18,20,32,.72);
       border:1px solid rgba(35,40,67,.75);
@@ -33,122 +36,162 @@
       overflow:hidden;
     }
 
-    /* MAP + STREETVIEW */
-    .mediaWrap{position:relative}
-    .media{
-      position:relative;
-      height:420px;
-    }
-    .media iframe{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      border:0;
-    }
+    /* LEFT MEDIA */
+    .mediaWrap{position:relative;min-height:520px}
+    .pane{position:absolute;inset:0}
+    .pane iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-    .toggleBar{
-      display:flex;
-      gap:10px;
-      padding:12px;
-      background:rgba(11,12,16,.55);
-      border-top:1px solid rgba(35,40,67,.75);
+    .overlay{
+      position:absolute;left:14px;top:14px;right:14px;
+      display:flex;gap:10px;flex-wrap:wrap;
+      align-items:center;justify-content:space-between;
+      pointer-events:none;z-index:5;
+    }
+    .badge{
+      pointer-events:auto;
+      padding:9px 12px;border-radius:999px;
+      background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(10px);
+      font-weight:800;font-size:13px;
+      color:rgba(245,247,255,.92);
+      display:inline-flex;gap:8px;align-items:center;
     }
     .btn{
-      padding:9px 14px;
-      border-radius:999px;
+      pointer-events:auto;
+      padding:9px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.35);
       backdrop-filter:blur(10px);
-      color:#fff;
-      font-weight:800;
-      font-size:13px;
+      color:rgba(245,247,255,.92);
+      font-weight:800;font-size:13px;
+      text-decoration:none;
+      display:inline-flex;gap:8px;align-items:center;
       cursor:pointer;
     }
     .btn.active{
       background:#fff;
       color:#000;
+      border-color:rgba(255,255,255,.45);
     }
 
-    /* TYPO */
+    /* RIGHT SIDE */
+    .side{padding:18px;display:grid;gap:14px;align-content:start}
     .logo{
-      font-family:'Montserrat',system-ui,sans-serif;
+      font-family:'Montserrat', system-ui, sans-serif;
       font-weight:300;
-      letter-spacing:.75em;
+      letter-spacing:0.75em;
       text-transform:uppercase;
       font-size:18px;
+      color:rgba(245,247,255,.92);
     }
-    @media(max-width:420px){.logo{letter-spacing:.55em}}
-    .side{padding:18px;display:grid;gap:14px}
-    .muted{color:var(--muted);line-height:1.7}
+    @media(max-width:420px){.logo{letter-spacing:0.55em}}
+    .muted{color:var(--muted);line-height:1.7;margin:0}
+    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
   </style>
 </head>
 
 <body>
-
 <main class="wrap">
-  <section class="card mediaWrap">
+  <div class="shell">
 
-    <!-- MAP -->
-    <div class="media" id="mapView">
-      <iframe
-        src="https://www.google.com/maps?q=-22.921292,-43.188711&z=19&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen>
-      </iframe>
-    </div>
+    <!-- LEFT: opens in Street View by default -->
+    <section class="card mediaWrap" aria-label="Locatie">
+      <div class="overlay">
+        <span class="badge">📍 Rio de Janeiro</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
+          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
 
-    <!-- STREET VIEW -->
-    <div class="media" id="streetView" style="display:none">
-      <iframe
-        src="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen>
-      </iframe>
-    </div>
+          <!-- always-working external links -->
+          <a class="btn" id="openSv" target="_blank" rel="noopener">↗ Open SV</a>
+          <a class="btn" id="openMaps" target="_blank" rel="noopener">↗ Open Maps</a>
+        </div>
+      </div>
 
-    <!-- TOGGLE -->
-    <div class="toggleBar">
-      <button class="btn active" id="mapBtn">🗺️ Map</button>
-      <button class="btn" id="streetBtn">👣 Street View</button>
-    </div>
-  </section>
+      <!-- Map pane (hidden by default) -->
+      <div class="pane" id="mapPane" style="display:none">
+        <iframe
+          id="mapFrame"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
 
-  <aside class="card side">
-    <div class="logo">Gioia Mundo</div>
-    <p class="muted">wereldse joy.<br>minimalistisch design.</p>
+      <!-- Street View pane (shown by default) -->
+      <div class="pane" id="svPane">
+        <iframe
+          id="svFrame"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
 
-    <blockquote class="instagram-media"
-      data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
-      data-instgrm-version="14"
-      style="background:#fff;border-radius:12px">
-    </blockquote>
-    <script async src="https://www.instagram.com/embed.js"></script>
-  </aside>
+    <!-- RIGHT: Brand + Instagram -->
+    <aside class="card side" aria-label="Info">
+      <div class="logo">Gioia Mundo</div>
+      <p class="muted">wereldse joy.<br>minimalistisch design.</p>
+
+      <div class="divider"></div>
+
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
+        data-instgrm-version="14"
+        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
+      </blockquote>
+      <script async src="https://www.instagram.com/embed.js"></script>
+
+      <div class="divider"></div>
+
+      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
+    </aside>
+
+  </div>
 </main>
 
 <script>
-  const mapView = document.getElementById("mapView");
-  const streetView = document.getElementById("streetView");
+  // Location
+  const lat = -22.921292;
+  const lng = -43.188711;
+
+  // Keep map zoom at 19 so Google pin stays visible (when switching to map)
+  const zMap = 19;
+
+  // Map embed with Google pin (q=)
+  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
+
+  // Street View embed (best-effort, no API key)
+  const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
+
+  document.getElementById("mapFrame").src = mapSrc;
+  document.getElementById("svFrame").src  = svSrc;
+
+  // External links (always reliable)
+  document.getElementById("openSv").href   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
+  document.getElementById("openMaps").href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+  // Toggle
   const mapBtn = document.getElementById("mapBtn");
-  const streetBtn = document.getElementById("streetBtn");
+  const svBtn = document.getElementById("svBtn");
+  const mapPane = document.getElementById("mapPane");
+  const svPane = document.getElementById("svPane");
 
-  mapBtn.onclick = () => {
-    mapView.style.display = "block";
-    streetView.style.display = "none";
+  mapBtn.addEventListener("click", () => {
+    mapPane.style.display = "block";
+    svPane.style.display = "none";
     mapBtn.classList.add("active");
-    streetBtn.classList.remove("active");
-  };
+    svBtn.classList.remove("active");
+  });
 
-  streetBtn.onclick = () => {
-    mapView.style.display = "none";
-    streetView.style.display = "block";
-    streetBtn.classList.add("active");
+  svBtn.addEventListener("click", () => {
+    mapPane.style.display = "none";
+    svPane.style.display = "block";
+    svBtn.classList.add("active");
     mapBtn.classList.remove("active");
-  };
+  });
 </script>
-
 </body>
 </html>
