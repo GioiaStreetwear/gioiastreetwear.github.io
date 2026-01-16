@@ -67,6 +67,7 @@
       text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
       cursor:pointer;
+      user-select:none;
     }
     .btn.active{background:#fff;color:#000;border-color:rgba(255,255,255,.45)}
 
@@ -106,10 +107,11 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- LEFT -->
+    <!-- LEFT: Street View default -->
     <section class="card mapWrap" aria-label="Locatie">
       <div class="overlay">
         <span class="badge" id="badgeText">📍</span>
+
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn active" id="svBtn" type="button">👣 Street View</button>
           <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
@@ -119,20 +121,12 @@
 
       <div class="loading" id="loading">LOADING…</div>
 
-      <!-- Street View (default shown) -->
-      <iframe id="svFrame"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen></iframe>
-
-      <!-- Map (hidden by default) -->
-      <iframe id="mapFrame" style="display:none"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen></iframe>
+      <!-- IMPORTANT: no src here. JS sets it. -->
+      <iframe id="svFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <iframe id="mapFrame" style="display:none" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </section>
 
-    <!-- RIGHT -->
+    <!-- RIGHT: Instagram -->
     <aside class="card side" aria-label="Info">
       <div class="logo">Gioia Mundo</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
@@ -155,37 +149,33 @@
 </main>
 
 <script>
-  // ✅ Street View test location (Constante Jardim 2-ish)
-  const SV_LAT = -22.921610;
-  const SV_LNG = -43.188540;
+  // Use ONE location for everything (so it never feels "off")
+  // Change these two if you want a different point:
+  const lat = -22.921292;
+  const lng = -43.188711;
 
-  // Map pin location (jouw originele punt)
-  const MAP_LAT = -22.921292;
-  const MAP_LNG = -43.188711;
+  const zMap = 19; // keep pin visible in map embed
 
-  const zMap = 19;
+  // Street View embed (best-effort without API key)
+  // This is the variant that has worked for you before:
+  const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
 
-  // Street View embed (best-effort zonder key)
-  const svSrc = `https://www.google.com/maps?layer=c&cbll=${SV_LAT},${SV_LNG}&cbp=11,0,0,0,0&output=embed`;
+  // Map embed with pin
+  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
 
-  // Map embed met Google pin
-  const mapSrc = `https://www.google.com/maps?q=${MAP_LAT},${MAP_LNG}&z=${zMap}&output=embed`;
+  // External open links (always work)
+  const openSvUrl   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
+  const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-  // External open links
-  const openSvUrl = `https://www.google.com/maps?layer=c&cbll=${SV_LAT},${SV_LNG}&cbp=11,0,0,0,0`;
-  const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${MAP_LAT},${MAP_LNG}`;
-
-  // UI text
-  document.getElementById("coordText").textContent =
-    `${SV_LAT.toFixed(6)}, ${SV_LNG.toFixed(6)}`;
-  document.getElementById("badgeText").textContent =
-    `📍 ${SV_LAT.toFixed(6)}, ${SV_LNG.toFixed(6)}`;
+  // Fill UI
+  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
   const svFrame = document.getElementById("svFrame");
   const mapFrame = document.getElementById("mapFrame");
   const loading = document.getElementById("loading");
 
-  // Load sources
+  // Set src ONCE via JS so nothing can overwrite it
   svFrame.src = svSrc;
   mapFrame.src = mapSrc;
 
@@ -197,7 +187,7 @@
     if (mapFrame.style.display !== "none") loading.style.display = "none";
   });
 
-  // Toggle
+  // Toggle buttons
   const svBtn = document.getElementById("svBtn");
   const mapBtn = document.getElementById("mapBtn");
   const openBtn = document.getElementById("openBtn");
