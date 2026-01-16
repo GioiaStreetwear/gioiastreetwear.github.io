@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gioia mundo</title>
   <meta name="description" content="Gioia mundo — wereldse joy, minimalistisch design." />
+
   <style>
     :root{
       --bg:#0b0c10; --text:#f5f7ff; --muted:#b8bfd8; --line:#232843;
-      --radius:22px;
     }
     *{box-sizing:border-box}
     body{
@@ -19,24 +19,54 @@
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg, #070810, var(--bg));
-      overflow-x:hidden;
     }
+
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
+    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr}
     @media(max-width:920px){.shell{grid-template-columns:1fr}}
+
     .card{
       background:rgba(18,20,32,.72);
       border:1px solid rgba(35,40,67,.75);
       border-radius:26px;
       overflow:hidden;
     }
+
+    /* MAP */
     .mapWrap{position:relative;min-height:520px}
     .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+    /* PIN OVERLAY */
+    .mapPin{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -100%);
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#ff2d55;
+      box-shadow:
+        0 0 0 6px rgba(255,45,85,.25),
+        0 10px 20px rgba(0,0,0,.45);
+      z-index:4;
+    }
+    .mapPin::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%);
+      width:0;height:0;
+      border-left:6px solid transparent;
+      border-right:6px solid transparent;
+      border-top:10px solid #ff2d55;
+    }
+
     .overlay{
       position:absolute;left:14px;top:14px;right:14px;
-      display:flex;gap:10px;flex-wrap:wrap;
-      align-items:center;justify-content:space-between;
-      pointer-events:none;z-index:3
+      display:flex;justify-content:space-between;align-items:center;
+      pointer-events:none;z-index:5;
     }
     .badge{
       pointer-events:auto;
@@ -45,7 +75,6 @@
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
       font-weight:800;font-size:13px;
-      color:rgba(245,247,255,.92)
     }
     .btn{
       pointer-events:auto;
@@ -53,112 +82,73 @@
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.35);
       backdrop-filter:blur(10px);
-      color:rgba(245,247,255,.92);
+      color:#fff;
       font-weight:800;font-size:13px;
       text-decoration:none;
-      display:inline-flex;gap:8px;align-items:center
+      display:inline-flex;gap:8px;align-items:center;
     }
-    .side{padding:18px;display:grid;gap:14px;align-content:start}
-    .logo{
-      letter-spacing:.38em;
-      font-weight:500;font-size:18px;
-      color:rgba(245,247,255,.92)
-    }
+
+    /* SIDE */
+    .side{padding:18px;display:grid;gap:14px}
+    .logo{letter-spacing:.38em;font-weight:500;font-size:18px}
     .muted{color:var(--muted);line-height:1.7}
-    .small{font-size:13px}
-    .pill{
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(35,40,67,.9);
-      background:rgba(11,12,16,.35);
-      color:var(--muted);
-      font-weight:800;font-size:13px;
-      width:fit-content
-    }
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
-    .fallback{
-      border:1px dashed rgba(35,40,67,.9);
-      border-radius:16px;
-      padding:12px;
-      color:var(--muted)
-    }
-    .mapLoading{
-      position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center;
-      color:rgba(184,191,216,.75);
-      font-weight:800;letter-spacing:.06em;
-      background:rgba(11,12,16,.35);
-      z-index:2
-    }
 
     /* SPLASH */
     .splash{
-      position:fixed; inset:0; z-index:9999;
-      display:flex; align-items:center; justify-content:center;
-      background:
-        radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
-        linear-gradient(180deg, #070810, var(--bg));
-      transition: opacity .5s ease;
+      position:fixed;inset:0;z-index:9999;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#070810,var(--bg));
+      transition:opacity .6s ease;
     }
-    .splash.hide{opacity:0; pointer-events:none}
+    .splash.hide{opacity:0;pointer-events:none}
     .splashCard{
-      width:min(560px, 92vw);
-      border-radius:28px;
-      padding:22px 20px;
+      background:rgba(18,20,32,.72);
       border:1px solid rgba(35,40,67,.75);
-      background: rgba(18,20,32,.72);
-      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      border-radius:28px;
+      padding:26px;
       text-align:center;
     }
-    .splashBrand{
-      letter-spacing:.45em;
-      font-weight:600;
-      font-size:14px;
-      color: rgba(245,247,255,.9);
-      margin-bottom:10px;
-    }
-    .splashTitle{
-      font-size: clamp(28px, 4vw, 42px);
-      margin:0;
-    }
-    .splashSub{
-      margin:10px 0 0;
-      color: var(--muted);
-      line-height:1.7;
-    }
+    .splashTitle{font-size:40px;margin:0}
   </style>
 </head>
 
 <body>
 
-<!-- Splash -->
+<!-- SPLASH -->
 <div class="splash" id="splash">
   <div class="splashCard">
-    <div class="splashBrand">GIOIA MUNDO</div>
+    <div class="logo">GIOIA MUNDO</div>
     <h1 class="splashTitle">ENTER RIO</h1>
-    <p class="splashSub small">📍 -22.921292, -43.188711</p>
+    <p class="muted">📍 -22.921292, -43.188711</p>
   </div>
 </div>
 
 <main class="wrap">
   <div class="shell">
+
+    <!-- MAP -->
     <section class="card mapWrap">
       <div class="overlay">
         <span class="badge">📍 Rio de Janeiro</span>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div>
           <a class="btn" href="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0" target="_blank">👣 Street View</a>
           <a class="btn" href="https://www.google.com/maps/search/?api=1&query=-22.921292,-43.188711" target="_blank">🗺️ Maps</a>
         </div>
       </div>
 
-      <div class="mapLoading">LOADING MAP…</div>
+      <!-- MAP -->
       <iframe
         src="https://www.google.com/maps?output=embed&ll=-22.921292,-43.188711&z=20&t=k"
         loading="lazy"
         allowfullscreen>
       </iframe>
+
+      <!-- CUSTOM PIN -->
+      <div class="mapPin" aria-hidden="true"></div>
     </section>
 
+    <!-- SIDE -->
     <aside class="card side">
       <div class="logo">GIOIA MUNDO</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
@@ -172,11 +162,12 @@
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
     </aside>
+
   </div>
 </main>
 
 <script>
-  // Splash weg na 1.8s
+  // Splash weg na 1.8 sec
   setTimeout(() => {
     document.getElementById("splash").classList.add("hide");
   }, 1800);
