@@ -6,7 +6,7 @@
   <title>Gioia Mundo</title>
   <meta name="description" content="Gioia Mundo — wereldse joy, minimalistisch design." />
 
-  <!-- Montserrat Light -->
+  <!-- Montserrat Light (300) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
@@ -38,42 +38,15 @@
       overflow:hidden;
     }
 
-    /* MAP */
+    /* Map */
     .mapWrap{position:relative;min-height:520px}
     .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-    /* PIN OVERLAY */
-    .mapPin{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform: translate(-50%, -100%);
-      width:18px;
-      height:18px;
-      border-radius:50%;
-      background:#ff2d55;
-      box-shadow:
-        0 0 0 6px rgba(255,45,85,.25),
-        0 10px 20px rgba(0,0,0,.45);
-      z-index:4;
-    }
-    .mapPin::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:-10px;
-      transform:translateX(-50%);
-      width:0;height:0;
-      border-left:6px solid transparent;
-      border-right:6px solid transparent;
-      border-top:10px solid #ff2d55;
-    }
 
     .overlay{
       position:absolute;left:14px;top:14px;right:14px;
       display:flex;justify-content:space-between;align-items:center;
       pointer-events:none;z-index:5;
-      gap:10px; flex-wrap:wrap;
+      gap:10px;flex-wrap:wrap;
     }
     .badge{
       pointer-events:auto;
@@ -82,6 +55,7 @@
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
       font-weight:800;font-size:13px;
+      color:rgba(245,247,255,.92);
     }
     .btn{
       pointer-events:auto;
@@ -89,33 +63,31 @@
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.35);
       backdrop-filter:blur(10px);
-      color:#fff;
+      color:rgba(245,247,255,.92);
       font-weight:800;font-size:13px;
       text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
     }
 
-    /* SIDE */
+    /* Side */
     .side{padding:18px;display:grid;gap:14px;align-content:start}
+    .muted{color:var(--muted);line-height:1.7}
+    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
 
-    /* ✅ Gioia Mundo titel: Montserrat Light + veel spacing */
+    /* ✅ Gioia Mundo typography: Montserrat Light + lots of spacing */
     .logo{
       font-family:'Montserrat', system-ui, sans-serif;
-      font-weight:300;           /* Light */
-      letter-spacing:0.75em;     /* veel ruimte */
+      font-weight:300;
+      letter-spacing:0.75em;
       text-transform:uppercase;
       font-size:18px;
       color:rgba(245,247,255,.92);
     }
-    /* op mobiel iets minder spacing, anders breekt hij */
     @media(max-width:420px){
       .logo{letter-spacing:0.55em}
     }
 
-    .muted{color:var(--muted);line-height:1.7}
-    .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
-
-    /* SPLASH */
+    /* Splash */
     .splash{
       position:fixed;inset:0;z-index:9999;
       display:flex;align-items:center;justify-content:center;
@@ -130,6 +102,7 @@
       padding:26px;
       text-align:center;
       width:min(560px,92vw);
+      box-shadow:0 18px 60px rgba(0,0,0,.35);
     }
     .splashTitle{
       font-family:'Montserrat', system-ui, sans-serif;
@@ -138,6 +111,7 @@
       text-transform:uppercase;
       font-size:34px;
       margin:10px 0 0;
+      color:rgba(245,247,255,.92);
     }
   </style>
 </head>
@@ -148,7 +122,7 @@
 <div class="splash" id="splash">
   <div class="splashCard">
     <div class="logo">Gioia Mundo</div>
-    <h1 class="splashTitle">Enter Rio</h1>
+    <div class="splashTitle">Enter Rio</div>
     <p class="muted">📍 -22.921292, -43.188711</p>
   </div>
 </div>
@@ -156,8 +130,8 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- MAP -->
-    <section class="card mapWrap">
+    <!-- MAP (Google pin via q=...) -->
+    <section class="card mapWrap" aria-label="Kaart">
       <div class="overlay">
         <span class="badge">📍 Rio de Janeiro</span>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -167,28 +141,30 @@
       </div>
 
       <iframe
-        src="https://www.google.com/maps?output=embed&ll=-22.921292,-43.188711&z=20&t=k"
+        src="https://www.google.com/maps?q=-22.921292,-43.188711&z=20&output=embed&t=k"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         allowfullscreen>
       </iframe>
-
-      <div class="mapPin" aria-hidden="true"></div>
     </section>
 
     <!-- SIDE -->
-    <aside class="card side">
+    <aside class="card side" aria-label="Info">
       <div class="logo">Gioia Mundo</div>
-      <p class="muted">wereldse joy.<br>minimalistisch design.</p>
+      <p class="muted" style="margin:0">wereldse joy.<br>minimalistisch design.</p>
 
       <div class="divider"></div>
 
       <blockquote class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
         data-instgrm-version="14"
-        style="background:#fff;border-radius:12px;margin:0">
+        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
+
+      <div class="divider"></div>
+
+      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
     </aside>
 
   </div>
