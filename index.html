@@ -197,7 +197,9 @@
     const params = new URLSearchParams(location.search);
     const lat = parseFloat(params.get("lat")) || -22.921292;
     const lng = parseFloat(params.get("lng")) || -43.188711;
-    const z   = parseInt(params.get("z") || 18, 10);
+
+    // ✅ Automatische default zoom op 19 (straatniveau)
+    const z = parseInt(params.get("z") || 19, 10);
 
     // URLs
     const streetUrl = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
