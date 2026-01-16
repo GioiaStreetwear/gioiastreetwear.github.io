@@ -22,6 +22,7 @@
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg,#070810,var(--bg));
+      overflow-x:hidden;
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
@@ -46,38 +47,49 @@
       pointer-events:none;
       z-index:5;
     }
-
-    .badge,.btn{
+    .badge{
       pointer-events:auto;
       padding:9px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
+      font-weight:800;font-size:13px;
+      color:rgba(245,247,255,.92);
+    }
+    .btn{
+      pointer-events:auto;
+      padding:9px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(10px);
       color:rgba(245,247,255,.92);
       font-weight:800;font-size:13px;
+      text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
+      cursor:pointer;
+      user-select:none;
     }
-    .btn{cursor:pointer;text-decoration:none}
-    .btn.active{background:#fff;color:#000}
+    .btn.active{background:#fff;color:#000;border-color:rgba(255,255,255,.45)}
 
     .loading{
-      position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center;
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
       color:rgba(184,191,216,.75);
       font-weight:800;letter-spacing:.06em;
       background:rgba(11,12,16,.25);
-      z-index:2;
+      z-index:2;pointer-events:none;
     }
 
     /* RIGHT */
-    .side{padding:18px;display:grid;gap:14px}
+    .side{padding:18px;display:grid;gap:14px;align-content:start}
     .logo{
-      font-family:'Montserrat',sans-serif;
+      font-family:'Montserrat', system-ui, sans-serif;
       font-weight:300;
-      letter-spacing:.75em;
+      letter-spacing:0.75em;
       text-transform:uppercase;
       font-size:18px;
+      color:rgba(245,247,255,.92);
     }
+    @media(max-width:420px){.logo{letter-spacing:0.55em}}
     .muted{color:var(--muted);line-height:1.7;margin:0}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
     .pill{
@@ -96,23 +108,24 @@
   <div class="shell">
 
     <!-- LEFT -->
-    <section class="card mapWrap">
+    <section class="card mapWrap" aria-label="Locatie">
       <div class="overlay">
         <span class="badge" id="badgeText">📍</span>
-        <div style="display:flex;gap:10px">
-          <button class="btn active" id="svBtn">👣 Street View</button>
-          <button class="btn" id="mapBtn">🗺️ Map</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
+          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
+          <a class="btn" id="openBtn" target="_blank" rel="noopener">↗ Open SV</a>
         </div>
       </div>
 
       <div class="loading" id="loading">LOADING…</div>
 
-      <iframe id="svFrame" allowfullscreen></iframe>
-      <iframe id="mapFrame" style="display:none" allowfullscreen></iframe>
+      <iframe id="svFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <iframe id="mapFrame" style="display:none" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </section>
 
     <!-- RIGHT -->
-    <aside class="card side">
+    <aside class="card side" aria-label="Info">
       <div class="logo">GIOIA MUNDO</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
       <span class="pill" id="coordText"></span>
@@ -122,59 +135,96 @@
       <blockquote class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
         data-instgrm-version="14"
-        style="background:#fff;border-radius:12px">
+        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
 
       <div class="divider"></div>
-      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
+      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
     </aside>
 
   </div>
 </main>
 
 <script>
-  // 📍 Rua Constante Jardim 2 — Rio de Janeiro
+  // 1) Vul hier je API key in (Maps Embed API enabled + referrer restrict op GitHub Pages)
+  const API_KEY = "PASTE_YOUR_API_KEY_HERE";
+
+  // 2) Locatie: Rua Constante Jardim 2 (werkt goed met SV)
   const lat = -22.921610;
   const lng = -43.188540;
-  const zoom = 19;
 
+  // 3) Street View look
+  const heading = 0;  // 0-360
+  const pitch   = 8;  // -90..90
+  const fov     = 90; // 10..120 (lager = meer ingezoomd)
+
+  // 4) Map zoom
+  const zMap = 19;
+
+  // ✅ Street View embed (betrouwbaar met key)
   const svSrc =
-    `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
+    `https://www.google.com/maps/embed/v1/streetview?key=${encodeURIComponent(API_KEY)}&location=${lat},${lng}` +
+    `&heading=${heading}&pitch=${pitch}&fov=${fov}`;
+
+  // Map embed met Google pin
   const mapSrc =
-    `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
+    `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
+
+  // External links (altijd)
+  const openSvUrl =
+    `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${heading}&pitch=${pitch}&fov=${fov}`;
+  const openMapsUrl =
+    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+  // UI text
+  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent = `📍 Rua Constante Jardim 2`;
 
   const svFrame = document.getElementById("svFrame");
   const mapFrame = document.getElementById("mapFrame");
   const loading = document.getElementById("loading");
 
+  // Load
   svFrame.src = svSrc;
   mapFrame.src = mapSrc;
 
-  document.getElementById("coordText").textContent =
-    `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-  document.getElementById("badgeText").textContent =
-    `📍 Rua Constante Jardim 2`;
+  // Hide loading when active frame loads
+  svFrame.addEventListener("load", () => {
+    if (svFrame.style.display !== "none") loading.style.display = "none";
+  });
+  mapFrame.addEventListener("load", () => {
+    if (mapFrame.style.display !== "none") loading.style.display = "none";
+  });
 
-  svFrame.onload = () => loading.style.display = "none";
+  // Toggle
+  const svBtn = document.getElementById("svBtn");
+  const mapBtn = document.getElementById("mapBtn");
+  const openBtn = document.getElementById("openBtn");
 
-  document.getElementById("svBtn").onclick = () => {
+  // Default: SV
+  openBtn.href = openSvUrl;
+  openBtn.textContent = "↗ Open SV";
+
+  svBtn.addEventListener("click", () => {
     loading.style.display = "flex";
     svFrame.style.display = "block";
     mapFrame.style.display = "none";
-    svFrame.src = svSrc;
-    document.getElementById("svBtn").classList.add("active");
-    document.getElementById("mapBtn").classList.remove("active");
-  };
+    svBtn.classList.add("active");
+    mapBtn.classList.remove("active");
+    openBtn.href = openSvUrl;
+    openBtn.textContent = "↗ Open SV";
+  });
 
-  document.getElementById("mapBtn").onclick = () => {
+  mapBtn.addEventListener("click", () => {
     loading.style.display = "flex";
     svFrame.style.display = "none";
     mapFrame.style.display = "block";
-    mapFrame.src = mapSrc;
-    document.getElementById("mapBtn").classList.add("active");
-    document.getElementById("svBtn").classList.remove("active");
-  };
+    mapBtn.classList.add("active");
+    svBtn.classList.remove("active");
+    openBtn.href = openMapsUrl;
+    openBtn.textContent = "↗ Open Maps";
+  });
 </script>
 </body>
 </html>
