@@ -1,257 +1,213 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gioia Mundo</title>
-  <meta name="description" content="Gioia Mundo — street art coordinates in streetwear." />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gioia Mundo</title>
 
-  <!-- Montserrat Light -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+<!-- Montserrat Light -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
-  <style>
-    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8;--line:#232843;}
-    *{box-sizing:border-box}
-    html,body{height:100%}
+<style>
+:root{
+  --bg:#0b0c10;
+  --card:#121420;
+  --text:#f5f7ff;
+  --muted:#b8bfd8;
+  --line:#232843;
+}
 
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      color:var(--text);
-      background:
-        radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
-        linear-gradient(180deg,#070810,var(--bg));
-      overflow-x:hidden;
-    }
+*{box-sizing:border-box}
 
-    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
+    radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
+    linear-gradient(180deg,#070810,var(--bg));
+}
 
-    /* 🔥 BREDERE LINKER KOLOM */
-    .shell{
-      display:grid;
-      gap:18px;
-      grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
-      align-items:start;
-    }
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px;
+}
 
-    @media(max-width:920px){
-      .wrap{padding:16px}
-      .shell{grid-template-columns:1fr}
-    }
+.shell{
+  display:grid;
+  grid-template-columns: 1.6fr 1fr; /* MAP GROTER */
+  gap:20px;
+}
 
-    .card{
-      background:rgba(18,20,32,.72);
-      border:1px solid rgba(35,40,67,.75);
-      border-radius:28px;
-      overflow:hidden;
-      min-width:0;
-    }
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+}
 
-    /* LEFT */
-    .leftCol{display:grid;gap:18px}
+/* Cards */
+.card{
+  background:rgba(18,20,32,.78);
+  border:1px solid rgba(35,40,67,.7);
+  border-radius:26px;
+  overflow:hidden;
+}
 
-    /* 🔥 GROTERE MAP */
-    .mapCard{
-      position:relative;
-      height:380px;
-      border-radius:28px;
-      overflow:hidden;
-    }
+/* MAP */
+.mapWrap{
+  position:relative;
+  height:520px; /* GROTER */
+}
 
-    @media(max-width:920px){
-      .mapCard{height:320px}
-    }
+.mapWrap iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
 
-    .mapCard iframe{
-      position:absolute;inset:0;
-      width:100%;height:100%;
-      border:0;
-      filter:saturate(1.05) contrast(1.05);
-    }
+/* Overlay */
+.overlay{
+  position:absolute;
+  top:14px;
+  left:14px;
+  right:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  pointer-events:none;
+  z-index:5;
+}
 
-    .badge{
-      position:absolute;left:16px;top:16px;z-index:4;
-      padding:9px 14px;border-radius:999px;
-      background:rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.16);
-      backdrop-filter:blur(10px);
-      font-weight:800;font-size:13px;
-      color:rgba(245,247,255,.92);
-      pointer-events:none;
-    }
+.badge{
+  pointer-events:auto;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:13px;
+}
 
-    .mapOverlay{
-      position:absolute;inset:0;
-      display:flex;
-      align-items:flex-end;
-      padding:16px;
-      background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.6));
-      z-index:3;
-      pointer-events:none;
-    }
+.btn{
+  pointer-events:auto;
+  padding:8px 14px;
+  border-radius:999px;
+  background:#fff;
+  color:#000;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+}
 
-    .btnRow{pointer-events:auto;display:flex;gap:12px;flex-wrap:wrap}
+/* RIGHT */
+.side{
+  padding:22px;
+  display:grid;
+  gap:16px;
+}
 
-    .btn{
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(10px);
-      color:#fff;
-      font-weight:800;
-      font-size:13px;
-      text-decoration:none;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      white-space:nowrap;
-    }
+.logo{
+  font-family:'Montserrat',sans-serif;
+  font-weight:300;
+  letter-spacing:.7em;
+  text-transform:uppercase;
+  font-size:18px;
+}
 
-    .btn.primary{
-      background:#fff;
-      color:#000;
-      border-color:rgba(255,255,255,.6);
-    }
+.text{
+  color:var(--muted);
+  line-height:1.7;
+}
 
-    /* 🔴 EDITORIAL PIN */
-    .pinPulse{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:14px;
-      height:14px;
-      background:#ff4d4d;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      z-index:3;
-      animation:pulse 2.2s infinite;
-    }
+.coord{
+  font-size:13px;
+  color:var(--muted);
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(35,40,67,.7);
+  width:fit-content;
+}
 
-    @keyframes pulse{
-      0%{box-shadow:0 0 0 0 rgba(255,77,77,.55)}
-      70%{box-shadow:0 0 0 20px rgba(255,77,77,0)}
-      100%{box-shadow:0 0 0 0 rgba(255,77,77,0)}
-    }
+/* Instagram smaller */
+.instagram{
+  max-width:360px;
+  margin-top:10px;
+}
 
-    .miniInfo{padding:18px}
+/* Footer buttons */
+.footerBtns{
+  display:flex;
+  gap:10px;
+}
 
-    .pill{
-      padding:9px 14px;border-radius:999px;
-      border:1px solid rgba(35,40,67,.9);
-      background:rgba(11,12,16,.35);
-      color:var(--muted);
-      font-weight:800;font-size:13px;
-      width:fit-content;
-    }
-
-    .muted{color:var(--muted);line-height:1.7;margin:0}
-    .small{font-size:13px}
-
-    /* RIGHT */
-    .side{padding:22px;display:grid;gap:16px}
-
-    .logo{
-      font-family:'Montserrat', system-ui, sans-serif;
-      font-weight:300;
-      letter-spacing:0.75em;
-      text-transform:uppercase;
-      font-size:18px;
-    }
-
-    .divider{height:1px;background:rgba(35,40,67,.65);margin:10px 0}
-
-    .instaWrap{
-      border-radius:20px;
-      overflow:hidden;
-      background:#fff;
-    }
-  </style>
+.footerBtns a{
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  color:var(--text);
+  text-decoration:none;
+  font-size:13px;
+}
+</style>
 </head>
 
 <body>
 <main class="wrap">
   <div class="shell">
 
-    <!-- LEFT -->
-    <section class="leftCol">
-      <div class="card mapCard">
-        <div class="badge">📍 Rua Constante Jardim 2</div>
-        <div class="pinPulse"></div>
-
-        <iframe id="mapFrame"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen></iframe>
-
-        <div class="mapOverlay">
-          <div class="btnRow">
-            <a class="btn primary" id="svBtn" target="_blank">👣 See your art in Street View</a>
-            <a class="btn" id="mapsBtn" target="_blank">🗺️ Open Maps</a>
-          </div>
-        </div>
+    <!-- MAP -->
+    <section class="card mapWrap">
+      <div class="overlay">
+        <span class="badge">📍 Rua Constante Jardim 2</span>
+        <a class="btn"
+           href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-22.921610,-43.188540"
+           target="_blank">
+          👣 See your art in Street View
+        </a>
       </div>
 
-      <div class="card miniInfo">
-        <span class="pill" id="coordText"></span>
-        <p class="muted small" style="margin-top:10px">
-          Street View opens in a new tab to work reliably in Safari / Firefox.
-        </p>
-      </div>
+      <!-- Google Map with pin -->
+      <iframe
+        src="https://www.google.com/maps?q=Rua+Constante+Jardim+2,+Rio+de+Janeiro&z=19&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
     </section>
 
-    <!-- RIGHT -->
+    <!-- INFO -->
     <aside class="card side">
-      <div class="logo">GIOIA MUNDO</div>
+      <div class="logo">Gioia Mundo</div>
 
-      <p class="muted">
+      <div class="text">
         You find the most amazing art on the streets all over the world.<br><br>
         We simply love it and want to expose the art more by connecting it with streetwear.<br><br>
         On the map you see the exact spot where the street art of your T is born,
         and below you find the artist who created it.
-      </p>
+      </div>
 
-      <div class="divider"></div>
+      <div class="coord">-22.921610, -43.188540</div>
 
-      <div class="instaWrap">
+      <!-- Instagram -->
+      <div class="instagram">
         <blockquote class="instagram-media"
           data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
           data-instgrm-version="14"
-          style="border:0;margin:0;max-width:100%;min-width:260px;">
+          style="background:#fff;border-radius:14px;">
         </blockquote>
+        <script async src="https://www.instagram.com/embed.js"></script>
       </div>
-      <script async src="https://www.instagram.com/embed.js"></script>
 
-      <div class="divider"></div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
-        <a class="btn" href="https://www.instagram.com/p/Cr8z_WQOFVn/" target="_blank">↗ Open post</a>
+      <div class="footerBtns">
+        <a href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
+        <a href="https://www.instagram.com/p/Cr8z_WQOFVn/" target="_blank">↗ Open post</a>
       </div>
     </aside>
 
   </div>
 </main>
-
-<script>
-  const lat = -22.921610;
-  const lng = -43.188540;
-  const zMap = 18;
-
-  document.getElementById("mapFrame").src =
-    `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&t=k&output=embed`;
-
-  document.getElementById("svBtn").href =
-    `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
-
-  document.getElementById("mapsBtn").href =
-    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-
-  document.getElementById("coordText").textContent =
-    `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-</script>
 </body>
 </html>
