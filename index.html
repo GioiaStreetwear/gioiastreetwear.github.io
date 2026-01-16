@@ -49,14 +49,15 @@
     /* LEFT COLUMN */
     .leftCol{display:grid;gap:14px;align-content:start;min-width:0}
 
+    /* map groter */
     .mapCard{
       position:relative;
-      height:220px;            /* vaste hoogte -> geen layout blow-up */
+      height:300px;            /* groter */
       border-radius:26px;
       overflow:hidden;
     }
     @media(max-width:920px){
-      .mapCard{height:240px}
+      .mapCard{height:280px}   /* mobiel ook groter */
     }
 
     .mapCard iframe{
@@ -64,10 +65,11 @@
       width:100%;height:100%;
       border:0;
       display:block;
+      filter:saturate(1.05) contrast(1.05);
     }
 
     .badge{
-      position:absolute;left:14px;top:14px;z-index:3;
+      position:absolute;left:14px;top:14px;z-index:4;
       padding:8px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.16);
@@ -81,8 +83,9 @@
       text-overflow:ellipsis;
     }
 
+    /* overlay buttons */
     .mapOverlay{
-      position:absolute;inset:0;z-index:2;
+      position:absolute;inset:0;z-index:3;
       display:flex;
       align-items:flex-end;
       justify-content:flex-start;
@@ -118,6 +121,27 @@
     .muted{color:var(--muted);line-height:1.7;margin:0}
     .small{font-size:13px}
 
+    /* Pulse pin (editorial) */
+    .pinPulse{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:14px;
+      height:14px;
+      background:#ff4d4d;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      z-index:3;
+      box-shadow:0 0 0 rgba(255,77,77,.6);
+      animation:pulse 2.2s infinite;
+      pointer-events:none;
+    }
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(255,77,77,.55)}
+      70%{box-shadow:0 0 0 18px rgba(255,77,77,0)}
+      100%{box-shadow:0 0 0 0 rgba(255,77,77,0)}
+    }
+
     /* RIGHT COLUMN */
     .side{padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
     .logo{
@@ -152,6 +176,9 @@
     <section class="leftCol" aria-label="Map & actions">
       <div class="card mapCard">
         <div class="badge" id="badgeText">📍 Rua Constante Jardim 2</div>
+
+        <!-- subtle pulse marker -->
+        <div class="pinPulse" aria-hidden="true"></div>
 
         <iframe id="mapFrame"
           loading="lazy"
@@ -215,7 +242,10 @@
   // Zoom (higher = more zoomed in)
   const zMap = 18;
 
-  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
+  // Satellite map (t=k)
+  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&t=k&output=embed`;
+
+  // Links (always work)
   const openSvUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
   const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
@@ -224,6 +254,7 @@
   document.getElementById("mapsBtn").href = openMapsUrl;
 
   document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent = `📍 Rua Constante Jardim 2`;
 </script>
 </body>
 </html>
