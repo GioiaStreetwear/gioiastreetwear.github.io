@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gioia mundo</title>
-  <meta name="description" content="Gioia mundo — wereldse joy, minimalistisch design." />
+  <title>Gioia Mundo</title>
+  <meta name="description" content="Gioia Mundo — wereldse joy, minimalistisch design." />
+
+  <!-- Montserrat Light -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -19,6 +24,7 @@
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
         linear-gradient(180deg, #070810, var(--bg));
+      overflow-x:hidden;
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
@@ -67,6 +73,7 @@
       position:absolute;left:14px;top:14px;right:14px;
       display:flex;justify-content:space-between;align-items:center;
       pointer-events:none;z-index:5;
+      gap:10px; flex-wrap:wrap;
     }
     .badge{
       pointer-events:auto;
@@ -89,8 +96,22 @@
     }
 
     /* SIDE */
-    .side{padding:18px;display:grid;gap:14px}
-    .logo{letter-spacing:.38em;font-weight:500;font-size:18px}
+    .side{padding:18px;display:grid;gap:14px;align-content:start}
+
+    /* ✅ Gioia Mundo titel: Montserrat Light + veel spacing */
+    .logo{
+      font-family:'Montserrat', system-ui, sans-serif;
+      font-weight:300;           /* Light */
+      letter-spacing:0.75em;     /* veel ruimte */
+      text-transform:uppercase;
+      font-size:18px;
+      color:rgba(245,247,255,.92);
+    }
+    /* op mobiel iets minder spacing, anders breekt hij */
+    @media(max-width:420px){
+      .logo{letter-spacing:0.55em}
+    }
+
     .muted{color:var(--muted);line-height:1.7}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
 
@@ -108,8 +129,16 @@
       border-radius:28px;
       padding:26px;
       text-align:center;
+      width:min(560px,92vw);
     }
-    .splashTitle{font-size:40px;margin:0}
+    .splashTitle{
+      font-family:'Montserrat', system-ui, sans-serif;
+      font-weight:300;
+      letter-spacing:0.45em;
+      text-transform:uppercase;
+      font-size:34px;
+      margin:10px 0 0;
+    }
   </style>
 </head>
 
@@ -118,8 +147,8 @@
 <!-- SPLASH -->
 <div class="splash" id="splash">
   <div class="splashCard">
-    <div class="logo">GIOIA MUNDO</div>
-    <h1 class="splashTitle">ENTER RIO</h1>
+    <div class="logo">Gioia Mundo</div>
+    <h1 class="splashTitle">Enter Rio</h1>
     <p class="muted">📍 -22.921292, -43.188711</p>
   </div>
 </div>
@@ -131,26 +160,25 @@
     <section class="card mapWrap">
       <div class="overlay">
         <span class="badge">📍 Rio de Janeiro</span>
-        <div>
-          <a class="btn" href="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0" target="_blank">👣 Street View</a>
-          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=-22.921292,-43.188711" target="_blank">🗺️ Maps</a>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn" href="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0" target="_blank" rel="noopener">👣 Street View</a>
+          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=-22.921292,-43.188711" target="_blank" rel="noopener">🗺️ Maps</a>
         </div>
       </div>
 
-      <!-- MAP -->
       <iframe
         src="https://www.google.com/maps?output=embed&ll=-22.921292,-43.188711&z=20&t=k"
         loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
         allowfullscreen>
       </iframe>
 
-      <!-- CUSTOM PIN -->
       <div class="mapPin" aria-hidden="true"></div>
     </section>
 
     <!-- SIDE -->
     <aside class="card side">
-      <div class="logo">GIOIA MUNDO</div>
+      <div class="logo">Gioia Mundo</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
 
       <div class="divider"></div>
@@ -158,7 +186,7 @@
       <blockquote class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
         data-instgrm-version="14"
-        style="background:#fff;border-radius:12px">
+        style="background:#fff;border-radius:12px;margin:0">
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
     </aside>
