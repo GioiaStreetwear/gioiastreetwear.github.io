@@ -6,7 +6,6 @@
   <title>Gioia Mundo</title>
   <meta name="description" content="Gioia Mundo — wereldse joy, minimalistisch design." />
 
-  <!-- Montserrat Light -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
@@ -29,14 +28,8 @@
     .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
     @media(max-width:920px){.shell{grid-template-columns:1fr}}
 
-    .card{
-      background:rgba(18,20,32,.72);
-      border:1px solid rgba(35,40,67,.75);
-      border-radius:26px;
-      overflow:hidden;
-    }
+    .card{background:rgba(18,20,32,.72);border:1px solid rgba(35,40,67,.75);border-radius:26px;overflow:hidden}
 
-    /* LEFT */
     .mapWrap{position:relative;min-height:520px}
     .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
@@ -44,70 +37,52 @@
       position:absolute;left:14px;top:14px;right:14px;
       display:flex;gap:10px;flex-wrap:wrap;
       align-items:center;justify-content:space-between;
-      pointer-events:none;
-      z-index:6;
+      pointer-events:none;z-index:6;
     }
-    .badge{
+    .badge,.btn{
       pointer-events:auto;
       padding:9px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.16);
       backdrop-filter:blur(10px);
-      font-weight:800;font-size:13px;
-      color:rgba(245,247,255,.92);
-    }
-    .btn{
-      pointer-events:auto;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(10px);
       color:rgba(245,247,255,.92);
       font-weight:800;font-size:13px;
-      text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
-      cursor:pointer;
+      text-decoration:none;
       user-select:none;
     }
+    .btn{cursor:pointer}
     .btn.active{background:#fff;color:#000;border-color:rgba(255,255,255,.45)}
 
     .loading{
-      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
       color:rgba(184,191,216,.75);
       font-weight:800;letter-spacing:.06em;
       background:rgba(11,12,16,.25);
       z-index:3;pointer-events:none;
     }
 
-    /* Fallback overlay */
     .fallback{
-      position:absolute;inset:0;
-      display:none;
-      align-items:center;justify-content:center;
-      background:rgba(11,12,16,.55);
-      z-index:5;
-      padding:16px;
-      text-align:center;
+      position:absolute;inset:0;z-index:5;
+      display:none;align-items:center;justify-content:center;
+      background:rgba(11,12,16,.62);
+      padding:16px;text-align:center;
     }
     .fallbackCard{
-      max-width:520px;
+      width:min(560px,92vw);
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.35);
       backdrop-filter:blur(10px);
-      border-radius:20px;
+      border-radius:22px;
       padding:18px;
     }
-    .fallbackTitle{
-      font-weight:900;
-      letter-spacing:.06em;
-      margin:0 0 8px;
-    }
-    .fallbackText{color:var(--muted);line-height:1.6;margin:0 0 14px}
+    .fallbackCard h3{margin:0 0 8px;font-size:16px}
+    .fallbackCard p{margin:0 0 14px;color:var(--muted);line-height:1.6}
 
-    /* RIGHT */
     .side{padding:18px;display:grid;gap:14px;align-content:start}
     .logo{
-      font-family:'Montserrat', system-ui, sans-serif;
+      font-family:'Montserrat',system-ui,sans-serif;
       font-weight:300;
       letter-spacing:0.75em;
       text-transform:uppercase;
@@ -117,14 +92,7 @@
     @media(max-width:420px){.logo{letter-spacing:0.55em}}
     .muted{color:var(--muted);line-height:1.7;margin:0}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
-    .pill{
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(35,40,67,.9);
-      background:rgba(11,12,16,.35);
-      color:var(--muted);
-      font-weight:800;font-size:13px;
-      width:fit-content;
-    }
+    .pill{padding:9px 12px;border-radius:999px;border:1px solid rgba(35,40,67,.9);background:rgba(11,12,16,.35);color:var(--muted);font-weight:800;font-size:13px;width:fit-content}
   </style>
 </head>
 
@@ -132,7 +100,6 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- LEFT -->
     <section class="card mapWrap" aria-label="Locatie">
       <div class="overlay">
         <span class="badge" id="badgeText">📍 Rua Constante Jardim 2</span>
@@ -147,10 +114,10 @@
 
       <div class="fallback" id="fallback">
         <div class="fallbackCard">
-          <p class="fallbackTitle">Street View opent niet in deze browser</p>
-          <p class="fallbackText">
-            Tik op de knop hieronder (werkt altijd).<br>
-            Tip: in Chrome werkt Street View in de pagina meestal wél.
+          <h3>Street View werkt hier niet in de pagina</h3>
+          <p>
+            Safari en Firefox blokkeren dit vaak.<br>
+            Open Street View in een nieuw tabblad:
           </p>
           <a class="btn" id="fallbackOpen" target="_blank" rel="noopener">↗ Open Street View</a>
         </div>
@@ -160,7 +127,6 @@
       <iframe id="mapFrame" style="display:none" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </section>
 
-    <!-- RIGHT -->
     <aside class="card side" aria-label="Info">
       <div class="logo">Gioia Mundo</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
@@ -183,24 +149,17 @@
 </main>
 
 <script>
-  // Gebruik 1 locatie voor alles (voelt het meest “juist”)
-  // Rua Constante Jardim 2 (test)
+  // Rua Constante Jardim 2
   const lat = -22.921610;
   const lng = -43.188540;
-
   const zMap = 19;
 
-  // Best-effort Street View embed (zonder key)
   const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
-
-  // Map embed met pin
   const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
 
-  // Externe links (altijd)
   const openSvUrl   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
   const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-  // UI
   document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
   const svFrame = document.getElementById("svFrame");
@@ -213,38 +172,38 @@
   const openBtn = document.getElementById("openBtn");
   const fallbackOpen = document.getElementById("fallbackOpen");
 
-  // Set sources
-  svFrame.src = svSrc;
-  mapFrame.src = mapSrc;
-
-  // Default: Street View
   openBtn.href = openSvUrl;
   openBtn.textContent = "↗ Open SV";
   fallbackOpen.href = openSvUrl;
 
-  // Loading handling
+  svFrame.src = svSrc;
+  mapFrame.src = mapSrc;
+
   let active = "sv";
-  const hideLoading = () => { loading.style.display = "none"; };
-  const showLoading = () => { loading.style.display = "flex"; };
 
-  svFrame.addEventListener("load", () => {
-    if (active === "sv") hideLoading();
-  });
-  mapFrame.addEventListener("load", () => {
-    if (active === "map") hideLoading();
-  });
+  const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-  // Fallback: als Street View na 3.5 sec nog “niet klaar” voelt, toon open-knop.
-  // (We kunnen niet in de iframe kijken door cross-origin, dus dit is best-effort.)
+  // Als Safari/Firefox: toon overlay direct (want kans op mislukken is groot)
+  if (isFirefox || isSafari) {
+    fallback.style.display = "flex";
+  }
+
+  // Best-effort: als het na 2.5s nog niet “klaar” voelt, toon overlay
   setTimeout(() => {
     if (active === "sv") fallback.style.display = "flex";
-  }, 3500);
+  }, 2500);
 
-  // Toggle SV
+  svFrame.addEventListener("load", () => {
+    if (active === "sv") loading.style.display = "none";
+  });
+  mapFrame.addEventListener("load", () => {
+    if (active === "map") loading.style.display = "none";
+  });
+
   svBtn.addEventListener("click", () => {
     active = "sv";
-    showLoading();
-    fallback.style.display = "none";
+    loading.style.display = "flex";
     svFrame.style.display = "block";
     mapFrame.style.display = "none";
     svBtn.classList.add("active");
@@ -252,15 +211,16 @@
     openBtn.href = openSvUrl;
     openBtn.textContent = "↗ Open SV";
 
-    // Her-trigger voor browsers die pas na switch echt laden
+    fallback.style.display = (isFirefox || isSafari) ? "flex" : "none";
     svFrame.src = svSrc;
-    setTimeout(() => { if (active === "sv") fallback.style.display = "flex"; }, 3500);
+    setTimeout(() => {
+      if (active === "sv") fallback.style.display = "flex";
+    }, 2500);
   });
 
-  // Toggle Map
   mapBtn.addEventListener("click", () => {
     active = "map";
-    showLoading();
+    loading.style.display = "flex";
     fallback.style.display = "none";
     svFrame.style.display = "none";
     mapFrame.style.display = "block";
@@ -268,7 +228,6 @@
     svBtn.classList.remove("active");
     openBtn.href = openMapsUrl;
     openBtn.textContent = "↗ Open Maps";
-
     mapFrame.src = mapSrc;
   });
 </script>
