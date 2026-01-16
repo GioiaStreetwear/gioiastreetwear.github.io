@@ -6,15 +6,13 @@
   <title>Gioia Mundo</title>
   <meta name="description" content="Gioia Mundo — wereldse joy, minimalistisch design." />
 
-  <!-- Montserrat Light (300) -->
+  <!-- Montserrat Light -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#0b0c10; --text:#f5f7ff; --muted:#b8bfd8; --line:#232843;
-    }
+    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8}
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -23,8 +21,7 @@
       background:
         radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
         radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
-        linear-gradient(180deg, #070810, var(--bg));
-      overflow-x:hidden;
+        linear-gradient(180deg,#070810,var(--bg));
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
@@ -38,17 +35,16 @@
       overflow:hidden;
     }
 
-    /* Map */
+    /* MAP */
     .mapWrap{position:relative;min-height:520px}
     .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
     .overlay{
       position:absolute;left:14px;top:14px;right:14px;
       display:flex;justify-content:space-between;align-items:center;
-      pointer-events:none;z-index:5;
-      gap:10px;flex-wrap:wrap;
+      pointer-events:none;z-index:5;gap:10px;flex-wrap:wrap;
     }
-    .badge{
+    .badge,.btn{
       pointer-events:auto;
       padding:9px 12px;border-radius:999px;
       background:rgba(0,0,0,.35);
@@ -56,38 +52,24 @@
       backdrop-filter:blur(10px);
       font-weight:800;font-size:13px;
       color:rgba(245,247,255,.92);
-    }
-    .btn{
-      pointer-events:auto;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(10px);
-      color:rgba(245,247,255,.92);
-      font-weight:800;font-size:13px;
       text-decoration:none;
       display:inline-flex;gap:8px;align-items:center;
     }
 
-    /* Side */
-    .side{padding:18px;display:grid;gap:14px;align-content:start}
+    /* SIDE */
+    .side{padding:18px;display:grid;gap:14px}
+    .logo{
+      font-family:'Montserrat',system-ui,sans-serif;
+      font-weight:300;
+      letter-spacing:.75em;
+      text-transform:uppercase;
+      font-size:18px;
+    }
+    @media(max-width:420px){.logo{letter-spacing:.55em}}
     .muted{color:var(--muted);line-height:1.7}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
 
-    /* ✅ Gioia Mundo typography: Montserrat Light + lots of spacing */
-    .logo{
-      font-family:'Montserrat', system-ui, sans-serif;
-      font-weight:300;
-      letter-spacing:0.75em;
-      text-transform:uppercase;
-      font-size:18px;
-      color:rgba(245,247,255,.92);
-    }
-    @media(max-width:420px){
-      .logo{letter-spacing:0.55em}
-    }
-
-    /* Splash */
+    /* SPLASH */
     .splash{
       position:fixed;inset:0;z-index:9999;
       display:flex;align-items:center;justify-content:center;
@@ -102,16 +84,14 @@
       padding:26px;
       text-align:center;
       width:min(560px,92vw);
-      box-shadow:0 18px 60px rgba(0,0,0,.35);
     }
     .splashTitle{
-      font-family:'Montserrat', system-ui, sans-serif;
+      font-family:'Montserrat',system-ui,sans-serif;
       font-weight:300;
-      letter-spacing:0.45em;
+      letter-spacing:.45em;
       text-transform:uppercase;
       font-size:34px;
       margin:10px 0 0;
-      color:rgba(245,247,255,.92);
     }
   </style>
 </head>
@@ -130,18 +110,19 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- MAP (Google pin via q=...) -->
-    <section class="card mapWrap" aria-label="Kaart">
+    <!-- MAP (Google pin gegarandeerd zichtbaar) -->
+    <section class="card mapWrap">
       <div class="overlay">
         <span class="badge">📍 Rio de Janeiro</span>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn" href="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0" target="_blank" rel="noopener">👣 Street View</a>
-          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=-22.921292,-43.188711" target="_blank" rel="noopener">🗺️ Maps</a>
+          <a class="btn" href="https://www.google.com/maps?layer=c&cbll=-22.921292,-43.188711&cbp=11,0,0,0,0" target="_blank">👣 Street View</a>
+          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=-22.921292,-43.188711" target="_blank">🛰️ Satellite</a>
         </div>
       </div>
 
+      <!-- 👇 DIT IS DE CRUCIALE REGEL -->
       <iframe
-        src="https://www.google.com/maps?q=-22.921292,-43.188711&z=20&output=embed&t=k"
+        src="https://www.google.com/maps?q=-22.921292,-43.188711&z=19&output=embed"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         allowfullscreen>
@@ -149,32 +130,27 @@
     </section>
 
     <!-- SIDE -->
-    <aside class="card side" aria-label="Info">
+    <aside class="card side">
       <div class="logo">Gioia Mundo</div>
-      <p class="muted" style="margin:0">wereldse joy.<br>minimalistisch design.</p>
+      <p class="muted">wereldse joy.<br>minimalistisch design.</p>
 
       <div class="divider"></div>
 
       <blockquote class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
         data-instgrm-version="14"
-        style="background:#fff;border:0;margin:0;max-width:100%;min-width:260px;padding:0;border-radius:12px">
+        style="background:#fff;border-radius:12px;margin:0">
       </blockquote>
       <script async src="https://www.instagram.com/embed.js"></script>
-
-      <div class="divider"></div>
-
-      <a class="btn" href="https://www.instagram.com/svn_shlne/" target="_blank" rel="noopener">📸 @svn_shlne</a>
     </aside>
 
   </div>
 </main>
 
 <script>
-  // Splash weg na 1.8 sec
-  setTimeout(() => {
+  setTimeout(()=> {
     document.getElementById("splash").classList.add("hide");
-  }, 1800);
+  },1800);
 </script>
 
 </body>
