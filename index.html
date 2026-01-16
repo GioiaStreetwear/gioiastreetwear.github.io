@@ -12,7 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <style>
-    :root{--bg:#0b0c10;--text:#f5f7ff;--muted:#b8bfd8;--line:#232843;}
+    :root{
+      --bg:#0b0c10; --text:#f5f7ff; --muted:#b8bfd8; --line:#232843;
+    }
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -26,7 +28,11 @@
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    .shell{display:grid;gap:14px;grid-template-columns:1.35fr .65fr;min-height:calc(100vh - 44px)}
+    .shell{
+      display:grid;gap:14px;
+      grid-template-columns:1.35fr .65fr;
+      min-height:calc(100vh - 44px);
+    }
     @media(max-width:920px){.shell{grid-template-columns:1fr}}
 
     .card{
@@ -36,16 +42,16 @@
       overflow:hidden;
     }
 
-    /* LEFT MEDIA */
-    .mediaWrap{position:relative;min-height:520px}
-    .pane{position:absolute;inset:0}
-    .pane iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    /* LEFT */
+    .mapWrap{position:relative;min-height:520px}
+    .mapWrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
     .overlay{
       position:absolute;left:14px;top:14px;right:14px;
       display:flex;gap:10px;flex-wrap:wrap;
       align-items:center;justify-content:space-between;
-      pointer-events:none;z-index:5;
+      pointer-events:none;
+      z-index:5;
     }
     .badge{
       pointer-events:auto;
@@ -55,7 +61,6 @@
       backdrop-filter:blur(10px);
       font-weight:800;font-size:13px;
       color:rgba(245,247,255,.92);
-      display:inline-flex;gap:8px;align-items:center;
     }
     .btn{
       pointer-events:auto;
@@ -75,7 +80,7 @@
       border-color:rgba(255,255,255,.45);
     }
 
-    /* RIGHT SIDE */
+    /* RIGHT */
     .side{padding:18px;display:grid;gap:14px;align-content:start}
     .logo{
       font-family:'Montserrat', system-ui, sans-serif;
@@ -88,6 +93,24 @@
     @media(max-width:420px){.logo{letter-spacing:0.55em}}
     .muted{color:var(--muted);line-height:1.7;margin:0}
     .divider{height:1px;background:rgba(35,40,67,.65);margin:8px 0}
+    .pill{
+      padding:9px 12px;border-radius:999px;
+      border:1px solid rgba(35,40,67,.9);
+      background:rgba(11,12,16,.35);
+      color:var(--muted);
+      font-weight:800;font-size:13px;
+      width:fit-content;
+    }
+
+    /* Optional loading hint */
+    .loading{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      color:rgba(184,191,216,.75);
+      font-weight:800;letter-spacing:.06em;
+      background:rgba(11,12,16,.25);
+      z-index:2;
+      pointer-events:none;
+    }
   </style>
 </head>
 
@@ -95,45 +118,43 @@
 <main class="wrap">
   <div class="shell">
 
-    <!-- LEFT: opens in Street View by default -->
-    <section class="card mediaWrap" aria-label="Locatie">
+    <!-- LEFT: Street View loads by default (old layout kept) -->
+    <section class="card mapWrap" aria-label="Locatie">
       <div class="overlay">
-        <span class="badge">📍 Rio de Janeiro</span>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
-          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
+        <span class="badge" id="badgeText">📍</span>
 
-          <!-- always-working external links -->
-          <a class="btn" id="openSv" target="_blank" rel="noopener">↗ Open SV</a>
-          <a class="btn" id="openMaps" target="_blank" rel="noopener">↗ Open Maps</a>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn active" id="svBtn" type="button">👣 Street View</button>
+          <button class="btn" id="mapBtn" type="button">🗺️ Map</button>
+          <a class="btn" id="openMaps" target="_blank" rel="noopener">↗ Open</a>
         </div>
       </div>
 
-      <!-- Map pane (hidden by default) -->
-      <div class="pane" id="mapPane" style="display:none">
-        <iframe
-          id="mapFrame"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen>
-        </iframe>
-      </div>
+      <div class="loading" id="loading">LOADING…</div>
 
-      <!-- Street View pane (shown by default) -->
-      <div class="pane" id="svPane">
-        <iframe
-          id="svFrame"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen>
-        </iframe>
-      </div>
+      <!-- Street View iframe (shown by default) -->
+      <iframe
+        id="svFrame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen>
+      </iframe>
+
+      <!-- Map iframe (hidden by default) -->
+      <iframe
+        id="mapFrame"
+        style="display:none"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen>
+      </iframe>
     </section>
 
-    <!-- RIGHT: Brand + Instagram -->
+    <!-- RIGHT: Info + Instagram (old layout kept) -->
     <aside class="card side" aria-label="Info">
       <div class="logo">Gioia Mundo</div>
       <p class="muted">wereldse joy.<br>minimalistisch design.</p>
+      <span class="pill" id="coordText"></span>
 
       <div class="divider"></div>
 
@@ -153,44 +174,68 @@
 </main>
 
 <script>
-  // Location
+  // Location (fixed for now)
   const lat = -22.921292;
   const lng = -43.188711;
 
-  // Keep map zoom at 19 so Google pin stays visible (when switching to map)
+  // Map zoom 19 => Google pin shows reliably in embed
   const zMap = 19;
 
-  // Map embed with Google pin (q=)
+  // Sources
+  const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
   const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=${zMap}&output=embed`;
 
-  // Street View embed (best-effort, no API key)
-  const svSrc  = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=embed`;
+  // External open link (starts as Street View)
+  const openSvUrl   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
+  const openMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-  document.getElementById("mapFrame").src = mapSrc;
-  document.getElementById("svFrame").src  = svSrc;
+  // Fill UI
+  document.getElementById("coordText").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById("badgeText").textContent = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
-  // External links (always reliable)
-  document.getElementById("openSv").href   = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0`;
-  document.getElementById("openMaps").href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  // Set iframe src (Street View first)
+  const svFrame = document.getElementById("svFrame");
+  const mapFrame = document.getElementById("mapFrame");
+  const loading = document.getElementById("loading");
 
-  // Toggle
-  const mapBtn = document.getElementById("mapBtn");
-  const svBtn = document.getElementById("svBtn");
-  const mapPane = document.getElementById("mapPane");
-  const svPane = document.getElementById("svPane");
+  svFrame.src = svSrc;
+  mapFrame.src = mapSrc;
 
-  mapBtn.addEventListener("click", () => {
-    mapPane.style.display = "block";
-    svPane.style.display = "none";
-    mapBtn.classList.add("active");
-    svBtn.classList.remove("active");
+  // Loading indicator: hide when either active frame loads
+  svFrame.addEventListener("load", () => {
+    if (svFrame.style.display !== "none") loading.style.display = "none";
+  });
+  mapFrame.addEventListener("load", () => {
+    if (mapFrame.style.display !== "none") loading.style.display = "none";
   });
 
+  // Buttons
+  const svBtn = document.getElementById("svBtn");
+  const mapBtn = document.getElementById("mapBtn");
+  const openBtn = document.getElementById("openMaps");
+
+  // Default state: Street View
+  openBtn.href = openSvUrl;
+  openBtn.textContent = "↗ Open SV";
+
   svBtn.addEventListener("click", () => {
-    mapPane.style.display = "none";
-    svPane.style.display = "block";
+    loading.style.display = "flex";
+    svFrame.style.display = "block";
+    mapFrame.style.display = "none";
     svBtn.classList.add("active");
     mapBtn.classList.remove("active");
+    openBtn.href = openSvUrl;
+    openBtn.textContent = "↗ Open SV";
+  });
+
+  mapBtn.addEventListener("click", () => {
+    loading.style.display = "flex";
+    svFrame.style.display = "none";
+    mapFrame.style.display = "block";
+    mapBtn.classList.add("active");
+    svBtn.classList.remove("active");
+    openBtn.href = openMapsUrl;
+    openBtn.textContent = "↗ Open Maps";
   });
 </script>
 </body>
