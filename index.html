@@ -13,10 +13,10 @@
   <style>
     :root{
       --bg:#0b0c10;
-      --card:#121420;
       --text:#f5f7ff;
       --muted:#b8bfd8;
       --line:#232843;
+      --card:rgba(18,20,32,.75);
     }
     *{box-sizing:border-box}
     body{
@@ -33,23 +33,29 @@
     .layout{
       display:grid;
       gap:20px;
-      grid-template-columns: 600px 1fr;
+      grid-template-columns: 640px 1fr;
+      align-items:start;
     }
     @media(max-width:960px){
       .layout{grid-template-columns:1fr}
     }
 
     .card{
-      background:rgba(18,20,32,.75);
+      background:var(--card);
       border:1px solid var(--line);
       border-radius:26px;
       overflow:hidden;
     }
 
-    /* MAP */
+    /* LEFT column */
+    .leftCol{display:grid; gap:14px}
+
     .map{
       position:relative;
-      height:420px;
+      height:460px; /* groter */
+    }
+    @media(max-width:960px){
+      .map{height:380px}
     }
     .map iframe{
       position:absolute;
@@ -59,46 +65,55 @@
       border:0;
     }
 
-    .map-ui{
-      position:absolute;
-      inset:16px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      pointer-events:none;
-    }
-
     .badge{
-      align-self:flex-start;
+      position:absolute;
+      top:14px;
+      left:14px;
+      z-index:2;
       padding:10px 14px;
       border-radius:999px;
       background:rgba(0,0,0,.45);
       backdrop-filter:blur(10px);
       font-weight:700;
       font-size:13px;
-      pointer-events:auto;
     }
 
-    .map-actions{
-      display:flex;
+    .actions{
+      padding:18px;
+      display:grid;
       gap:10px;
-      pointer-events:auto;
     }
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap}
 
     .btn{
-      padding:10px 14px;
+      padding:11px 14px;
       border-radius:999px;
       background:#fff;
       color:#000;
-      font-weight:700;
+      font-weight:800;
       font-size:13px;
       text-decoration:none;
       display:inline-flex;
       align-items:center;
       gap:8px;
+      width:fit-content;
+      border:1px solid rgba(255,255,255,.35);
+    }
+    .btn.secondary{
+      background:rgba(0,0,0,.35);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(10px);
     }
 
-    /* INFO */
+    .note{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    /* RIGHT column */
     .side{padding:22px;display:grid;gap:16px}
     .logo{
       font-family:'Montserrat',sans-serif;
@@ -107,7 +122,7 @@
       text-transform:uppercase;
       font-size:18px;
     }
-    .text{color:var(--muted);line-height:1.7}
+    .text{color:var(--muted);line-height:1.7;margin:0}
     .coords{
       width:fit-content;
       padding:8px 12px;
@@ -118,9 +133,8 @@
     }
     .divider{height:1px;background:var(--line);margin:8px 0}
 
-    .insta{
-      max-width:360px;
-    }
+    /* Instagram a bit smaller */
+    .insta{max-width:320px}
   </style>
 </head>
 
@@ -128,30 +142,44 @@
 <main class="wrap">
   <div class="layout">
 
-    <!-- MAP -->
-<section class="card" style="padding:18px">
-  <a class="streetview-btn"
-     href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-22.921610,-43.188540"
-     target="_blank" rel="noopener">
-     👣 See the street where your art was created
-  </a>
-  <p class="sv-note">
-    Street View opens in a new tab for best performance in Safari & Firefox.
-  </p>
-</section>
-
-            </a>
-            <a class="btn"
-               href="https://www.google.com/maps/search/?api=1&query=-22.921610,-43.188540"
-               target="_blank">
-               🗺️ Open Maps
-            </a>
-          </div>
+    <!-- LEFT -->
+    <div class="leftCol">
+      <!-- MAP CARD -->
+      <section class="card">
+        <div class="map">
+          <div class="badge">📍 Rua Constante Jardim 2</div>
+          <!-- Satellite map: t=k -->
+          <iframe
+            src="https://www.google.com/maps?q=-22.921610,-43.188540&z=19&t=k&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- INFO -->
+      <!-- BUTTONS (separate from map) -->
+      <section class="card actions">
+        <div class="btnRow">
+          <a class="btn"
+             href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-22.921610,-43.188540"
+             target="_blank" rel="noopener">
+            👣 Klik hier om de graffiti-plek in Street View te zien
+          </a>
+
+          <a class="btn secondary"
+             href="https://www.google.com/maps/search/?api=1&query=-22.921610,-43.188540"
+             target="_blank" rel="noopener">
+            🗺️ Open Maps
+          </a>
+        </div>
+
+        <p class="note">
+          Street View opens in a new tab for best performance in Safari &amp; Firefox.
+        </p>
+      </section>
+    </div>
+
+    <!-- RIGHT -->
     <aside class="card side">
       <div class="logo">GIOIA MUNDO</div>
 
