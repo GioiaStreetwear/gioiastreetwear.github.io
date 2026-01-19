@@ -1,216 +1,182 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gioia Mundo</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gioia Mundo</title>
 
-<!-- Montserrat Light -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+  <!-- Montserrat Light -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#0b0c10;
-  --card:#121420;
-  --text:#f5f7ff;
-  --muted:#b8bfd8;
-  --line:#232843;
-}
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --card:#121420;
+      --text:#f5f7ff;
+      --muted:#b8bfd8;
+      --line:#232843;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
+        radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
+        linear-gradient(180deg,#070810,var(--bg));
+    }
 
-*{box-sizing:border-box}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .layout{
+      display:grid;
+      gap:20px;
+      grid-template-columns: 600px 1fr;
+    }
+    @media(max-width:960px){
+      .layout{grid-template-columns:1fr}
+    }
 
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--text);
-  background:
-    radial-gradient(900px 500px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-    radial-gradient(700px 500px at 90% 20%, rgba(46,229,157,.14), transparent 55%),
-    linear-gradient(180deg,#070810,var(--bg));
-}
+    .card{
+      background:rgba(18,20,32,.75);
+      border:1px solid var(--line);
+      border-radius:26px;
+      overflow:hidden;
+    }
 
-.wrap{
-  max-width:1300px;
-  margin:0 auto;
-  padding:26px;
-}
+    /* MAP */
+    .map{
+      position:relative;
+      height:420px;
+    }
+    .map iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
 
-.shell{
-  display:grid;
-  grid-template-columns: 1.9fr 1fr; /* MAP NOG GROTER */
-  gap:22px;
-}
+    .map-ui{
+      position:absolute;
+      inset:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      pointer-events:none;
+    }
 
-@media(max-width:900px){
-  .shell{grid-template-columns:1fr}
-}
+    .badge{
+      align-self:flex-start;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(10px);
+      font-weight:700;
+      font-size:13px;
+      pointer-events:auto;
+    }
 
-/* Cards */
-.card{
-  background:rgba(18,20,32,.78);
-  border:1px solid rgba(35,40,67,.7);
-  border-radius:28px;
-  overflow:hidden;
-}
+    .map-actions{
+      display:flex;
+      gap:10px;
+      pointer-events:auto;
+    }
 
-/* MAP */
-.mapWrap{
-  position:relative;
-  height:620px; /* GROTER + HERO */
-}
+    .btn{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#fff;
+      color:#000;
+      font-weight:700;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
 
-.mapWrap iframe{
-  width:100%;
-  height:100%;
-  border:0;
-}
+    /* INFO */
+    .side{padding:22px;display:grid;gap:16px}
+    .logo{
+      font-family:'Montserrat',sans-serif;
+      font-weight:300;
+      letter-spacing:.7em;
+      text-transform:uppercase;
+      font-size:18px;
+    }
+    .text{color:var(--muted);line-height:1.7}
+    .coords{
+      width:fit-content;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      font-size:13px;
+      color:var(--muted);
+    }
+    .divider{height:1px;background:var(--line);margin:8px 0}
 
-/* Overlay */
-.overlay{
-  position:absolute;
-  inset:16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  pointer-events:none;
-  z-index:5;
-}
-
-.badge{
-  pointer-events:auto;
-  padding:9px 14px;
-  border-radius:999px;
-  background:rgba(0,0,0,.45);
-  border:1px solid rgba(255,255,255,.18);
-  font-size:13px;
-  backdrop-filter: blur(8px);
-}
-
-/* CTA BUTTON */
-.cta{
-  pointer-events:auto;
-  padding:14px 22px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#ffffff,#e6e6ff);
-  color:#000;
-  font-size:14px;
-  font-weight:700;
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,.35);
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-
-.cta:hover{
-  transform:translateY(-2px);
-  box-shadow:0 14px 40px rgba(0,0,0,.45);
-}
-
-/* RIGHT */
-.side{
-  padding:26px;
-  display:grid;
-  gap:18px;
-}
-
-.logo{
-  font-family:'Montserrat',sans-serif;
-  font-weight:300;
-  letter-spacing:.75em;
-  text-transform:uppercase;
-  font-size:18px;
-}
-
-.text{
-  color:var(--muted);
-  line-height:1.7;
-}
-
-.coord{
-  font-size:13px;
-  color:var(--muted);
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid rgba(35,40,67,.7);
-  width:fit-content;
-}
-
-/* Instagram smaller */
-.instagram{
-  max-width:340px;
-}
-
-/* Footer buttons */
-.footerBtns{
-  display:flex;
-  gap:10px;
-}
-
-.footerBtns a{
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  color:var(--text);
-  text-decoration:none;
-  font-size:13px;
-}
-</style>
+    .insta{
+      max-width:360px;
+    }
+  </style>
 </head>
 
 <body>
 <main class="wrap">
-  <div class="shell">
+  <div class="layout">
 
     <!-- MAP -->
-    <section class="card mapWrap">
-      <div class="overlay">
-        <span class="badge">📍 Rua Constante Jardim 2 · Rio de Janeiro</span>
+    <section class="card">
+      <div class="map">
+        <iframe
+          src="https://www.google.com/maps?q=-22.921610,-43.188540&z=19&t=k&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
 
-        <a class="cta"
-           href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-22.921610,-43.188540"
-           target="_blank">
-          👣 Click here to see where this artwork lives on the street
-        </a>
+        <div class="map-ui">
+          <div class="badge">📍 Rua Constante Jardim 2</div>
+          <div class="map-actions">
+            <a class="btn"
+               href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-22.921610,-43.188540"
+               target="_blank">
+               👣 See your art in Street View
+            </a>
+            <a class="btn"
+               href="https://www.google.com/maps/search/?api=1&query=-22.921610,-43.188540"
+               target="_blank">
+               🗺️ Open Maps
+            </a>
+          </div>
+        </div>
       </div>
-
-      <!-- Google Map with pin -->
-     <iframe
-  src="https://www.google.com/maps?q=-22.921610,-43.188540&z=19&t=k&output=embed"
-  loading="lazy"
-  referrerpolicy="no-referrer-when-downgrade">
-</iframe>
-
+    </section>
 
     <!-- INFO -->
     <aside class="card side">
-      <div class="logo">Gioia Mundo</div>
+      <div class="logo">GIOIA MUNDO</div>
 
-      <div class="text">
+      <p class="text">
         You find the most amazing art on the streets all over the world.<br><br>
         We simply love it and want to expose the art more by connecting it with streetwear.<br><br>
         On the map you see the exact spot where the street art of your T is born,
         and below you find the artist who created it.
-      </div>
+      </p>
 
-      <div class="coord">-22.921610, -43.188540</div>
+      <span class="coords">-22.921610, -43.188540</span>
 
-      <!-- Instagram -->
-      <div class="instagram">
+      <div class="divider"></div>
+
+      <div class="insta">
         <blockquote class="instagram-media"
           data-instgrm-permalink="https://www.instagram.com/p/Cr8z_WQOFVn/"
           data-instgrm-version="14"
-          style="background:#fff;border-radius:14px;">
+          style="background:#fff;border-radius:14px">
         </blockquote>
         <script async src="https://www.instagram.com/embed.js"></script>
-      </div>
-
-      <div class="footerBtns">
-        <a href="https://www.instagram.com/svn_shlne/" target="_blank">📸 @svn_shlne</a>
-        <a href="https://www.instagram.com/p/Cr8z_WQOFVn/" target="_blank">↗ Open post</a>
       </div>
     </aside>
 
